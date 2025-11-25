@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="UTF-8">
+  <title>Sistema de Gestão de RIDs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/_sdk/element_sdk.js"></script><!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #d5d5d5;
+      color: #2c2c2c;
+    }
+    
+    .app-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Login Screen */
+    .login-wrapper {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      padding: 48px 40px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    .logo-container {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+    }
+    
+    .system-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2c2c2c;
+      margin-bottom: 8px;
+    }
+    
+    .system-subtitle {
+      font-size: 14px;
+      color: #8c8c8c;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2c2c2c;
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.2s;
+      background: white;
+      color: #2c2c2c;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #e4a40d;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: #e4a40d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background: #d09a0c;
+      transform: translateY(-1px);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .login-hint {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #8c8c8c;
+      line-height: 1.6;
+    }
+    
+    .login-hint strong {
+      color: #2c2c2c;
+      display: block;
+      margin-bottom: 8px;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard-container {
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+    }
+    
+    .dashboard-container.active {
+      display: flex;
+    }
+    
+    /* Header */
+    .dashboard-header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .header-logo {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .user-info {
+      text-align: right;
+    }
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2c2c2c;
+    }
+    
+    .user-role {
+      font-size: 12px;
+      color: #8c8c8c;
+    }
+    
+    .btn-logout {
+      padding: 8px 16px;
+      background: transparent;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8c8c8c;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-logout:hover {
+      border-color: #e4a40d;
+      color: #e4a40d;
+    }
+    
+    /* Main Layout */
+    .dashboard-main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: white;
+      border-right: 1px solid #e0e0e0;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+    
+    .nav-section {
+      margin-bottom: 32px;
+    }
+    
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8c8c8c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 24px;
+      margin-bottom: 12px;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #8c8c8c;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    
+    .nav-item:hover {
+      background: #f8f8f8;
+      color: #2c2c2c;
+    }
+    
+    .nav-item.active {
+      background: #fef9ed;
+      color: #e4a40d;
+      border-left-color: #e4a40d;
+    }
+    
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      background: #f5f5f5;
+      padding: 32px;
+      overflow-y: auto;
+    }
+    
+    .content-section {
+      display: none;
+    }
+    
+    .content-section.active {
+      display: block;
+    }
+    
+    .section-header {
+      margin-bottom: 24px;
+    }
+    
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: #2c2c2c;
+      margin-bottom: 8px;
+    }
+    
+    .section-subtitle {
+      font-size: 14px;
+      color: #8c8c8c;
+    }
+    
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s;
+    }
+    
+    .stat-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #8c8c8c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      padding: 6px;
+      background: #fef9ed;
+      border-radius: 8px;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2c2c2c;
+      margin-bottom: 4px;
+    }
+    
+    .stat-change {
+      font-size: 13px;
+      color: #8c8c8c;
+    }
+    
+    /* Table */
+    .data-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .table-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+    
+    .table-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn-secondary {
+      padding: 8px 16px;
+      background: transparent;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #8c8c8c;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      border-color: #e4a40d;
+      color: #e4a40d;
+    }
+    
+    .table-content {
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    thead {
+      background: #f8f8f8;
+    }
+    
+    th {
+      padding: 12px 24px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8c8c8c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    td {
+      padding: 16px 24px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: #2c2c2c;
+    }
+    
+    tbody tr:hover {
+      background: #fafafa;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-open {
+      background: #fef9ed;
+      color: #e4a40d;
+    }
+    
+    .status-progress {
+      background: #e8f4fd;
+      color: #2196f3;
+    }
+    
+    .status-closed {
+      background: #e8f5e9;
+      color: #4caf50;
+    }
+    
+    /* Form Elements */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    textarea.form-input {
+      min-height: 120px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+      
+      .content-area {
+        padding: 20px;
+      }
+      
+      .dashboard-header {
+        padding: 16px 20px;
+      }
+      
+      .header-title {
+        font-size: 16px;
+      }
+      
+      .user-info {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        height: 100%;
+        z-index: 100;
+        transition: left 0.3s;
+      }
+      
+      .sidebar.mobile-open {
+        left: 0;
+      }
+    }
+    
+    :focus-visible {
+      outline: 2px solid #e4a40d;
+      outline-offset: 2px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Login Screen -->
+  <div id="login-screen" class="app-container">
+   <div class="login-wrapper">
+    <div class="login-card">
+     <div class="logo-container">
+      <svg class="logo-icon" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="48" height="48" rx="8" stroke="#e4a40d" stroke-width="2" /> <path d="M20 28L28 36L44 20" stroke="#e4a40d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <h1 id="system-title" class="system-title">Sistema de Gestão de RIDs</h1>
+      <p id="login-subtitle" class="system-subtitle">Acesse sua conta para continuar</p>
+     </div>
+     <form id="login-form">
+      <div class="form-group"><label for="username" class="form-label">Usuário</label> <input type="text" id="username" name="username" class="form-input" placeholder="Digite seu usuário" required>
+      </div>
+      <div class="form-group"><label for="password" class="form-label">Senha</label> <input type="text" id="password" name="password" class="form-input" placeholder="Digite sua senha" required>
+      </div><button type="submit" class="btn-primary">Entrar</button>
+     </form>
+     <div class="login-hint"><strong>💡 Credenciais de teste:</strong>
+      <div style="margin-top: 8px;">
+       <div>
+        <strong>Admin:</strong> admin / admin123
+       </div>
+       <div style="margin-top: 4px;">
+        <strong>Funcionário:</strong> funcionario / func123
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="dashboard-container">
+   <header class="dashboard-header">
+    <div class="header-left">
+     <svg class="header-logo" viewbox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="32" height="32" rx="6" stroke="#e4a40d" stroke-width="2" /> <path d="M13 20L18 25L27 16" stroke="#e4a40d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+     </svg>
+     <h1 id="header-title" class="header-title">Sistema de Gestão de RIDs</h1>
+    </div>
+    <div class="header-right">
+     <div class="user-info">
+      <div id="user-name" class="user-name">
+       Administrador
+      </div>
+      <div id="user-role" class="user-role">
+       Admin
+      </div>
+     </div><button id="logout-btn" class="btn-logout">Sair</button>
+    </div>
+   </header>
+   <main class="dashboard-main">
+    <aside class="sidebar">
+     <nav>
+      <div class="nav-section">
+       <div class="nav-section-title">
+        Menu Principal
+       </div><a class="nav-item active" data-section="dashboard">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
+        </svg> Dashboard </a> <a class="nav-item" data-section="rids">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /> <polyline points="14 2 14 8 20 8" /> <line x1="16" y1="13" x2="8" y2="13" /> <line x1="16" y1="17" x2="8" y2="17" /> <polyline points="10 9 9 9 8 9" />
+        </svg> RIDs </a> <a class="nav-item" data-section="funcionarios">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg> Funcionários </a> <a class="nav-item" data-section="relatorio">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10" /> <line x1="12" y1="20" x2="12" y2="4" /> <line x1="6" y1="20" x2="6" y2="14" />
+        </svg> Relatórios </a>
+      </div>
+     </nav>
+    </aside>
+    <div class="content-area"><!-- Dashboard Section -->
+     <section id="section-dashboard" class="content-section active">
+      <div class="section-header">
+       <h2 id="admin-welcome" class="section-title">Bem-vindo ao painel administrativo</h2>
+       <p class="section-subtitle">Visão geral do sistema de gestão de RIDs</p>
+      </div>
+      <div class="card-grid">
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Total de RIDs</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /> <polyline points="14 2 14 8 20 8" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         24
+        </div>
+        <div class="stat-change">
+         +3 este mês
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Em Aberto</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><circle cx="12" cy="12" r="10" /> <polyline points="12 6 12 12 16 14" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         8
+        </div>
+        <div class="stat-change">
+         Requer atenção
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Funcionários</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         12
+        </div>
+        <div class="stat-change">
+         Ativos no sistema
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Concluídos</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         16
+        </div>
+        <div class="stat-change">
+         66% taxa de conclusão
+        </div>
+       </div>
+      </div>
+      <div class="data-table">
+       <div class="table-header">
+        <h3 class="table-title">RIDs Recentes</h3>
+        <div class="table-actions"><button class="btn-secondary">Filtrar</button> <button class="btn-secondary">Exportar</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
+          <tr>
+           <th>ID</th>
+           <th>Assunto</th>
+           <th>Funcionário</th>
+           <th>Data</th>
+           <th>Status</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>#RID-001</td>
+           <td>Falha no processo de produção</td>
+           <td>João Silva</td>
+           <td>15/01/2025</td>
+           <td><span class="status-badge status-open">Aberto</span></td>
+          </tr>
+          <tr>
+           <td>#RID-002</td>
+           <td>Incidente de segurança</td>
+           <td>Maria Santos</td>
+           <td>14/01/2025</td>
+           <td><span class="status-badge status-progress">Em análise</span></td>
+          </tr>
+          <tr>
+           <td>#RID-003</td>
+           <td>Não conformidade qualidade</td>
+           <td>Pedro Costa</td>
+           <td>13/01/2025</td>
+           <td><span class="status-badge status-closed">Concluído</span></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section><!-- RIDs Section -->
+     <section id="section-rids" class="content-section">
+      <div class="section-header">
+       <h2 class="section-title">Gestão de RIDs</h2>
+       <p class="section-subtitle">Visualize e gerencie todos os registros de incidência</p>
+      </div>
+      <div class="data-table">
+       <div class="table-header">
+        <h3 class="table-title">Todos os RIDs</h3>
+        <div class="table-actions"><button class="btn-secondary">Novo RID</button> <button class="btn-secondary">Filtrar</button> <button class="btn-secondary">Exportar</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
+          <tr>
+           <th>ID</th>
+           <th>Assunto</th>
+           <th>Descrição</th>
+           <th>Funcionário</th>
+           <th>Data</th>
+           <th>Status</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>#RID-001</td>
+           <td>Falha no processo de produção</td>
+           <td>Equipamento apresentou defeito durante operação</td>
+           <td>João Silva</td>
+           <td>15/01/2025 14:30</td>
+           <td><span class="status-badge status-open">Aberto</span></td>
+          </tr>
+          <tr>
+           <td>#RID-002</td>
+           <td>Incidente de segurança</td>
+           <td>Quase acidente na área de montagem</td>
+           <td>Maria Santos</td>
+           <td>14/01/2025 10:15</td>
+           <td><span class="status-badge status-progress">Em análise</span></td>
+          </tr>
+          <tr>
+           <td>#RID-003</td>
+           <td>Não conformidade qualidade</td>
+           <td>Produto fora das especifica��ões técnicas</td>
+           <td>Pedro Costa</td>
+           <td>13/01/2025 16:45</td>
+           <td><span class="status-badge status-closed">Concluído</span></td>
+          </tr>
+          <tr>
+           <td>#RID-004</td>
+           <td>Atraso na entrega</td>
+           <td>Fornecedor não cumpriu prazo acordado</td>
+           <td>Ana Oliveira</td>
+           <td>12/01/2025 09:20</td>
+           <td><span class="status-badge status-closed">Concluído</span></td>
+          </tr>
+          <tr>
+           <td>#RID-005</td>
+           <td>Falha de comunicação</td>
+           <td>Informações não repassadas entre turnos</td>
+           <td>Carlos Mendes</td>
+           <td>11/01/2025 18:00</td>
+           <td><span class="status-badge status-open">Aberto</span></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section><!-- Funcionários Section -->
+     <section id="section-funcionarios" class="content-section">
+      <div class="section-header">
+       <h2 class="section-title">Funcionários</h2>
+       <p class="section-subtitle">Gerencie os usuários do sistema</p>
+      </div>
+      <div class="data-table">
+       <div class="table-header">
+        <h3 class="table-title">Lista de Funcionários</h3>
+        <div class="table-actions"><button class="btn-secondary">Novo Funcionário</button> <button class="btn-secondary">Exportar</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
+          <tr>
+           <th>Nome</th>
+           <th>Email</th>
+           <th>Departamento</th>
+           <th>RIDs Criados</th>
+           <th>Status</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>João Silva</td>
+           <td>joao.silva@empresa.com</td>
+           <td>Produção</td>
+           <td>5</td>
+           <td><span class="status-badge status-closed">Ativo</span></td>
+          </tr>
+          <tr>
+           <td>Maria Santos</td>
+           <td>maria.santos@empresa.com</td>
+           <td>Qualidade</td>
+           <td>8</td>
+           <td><span class="status-badge status-closed">Ativo</span></td>
+          </tr>
+          <tr>
+           <td>Pedro Costa</td>
+           <td>pedro.costa@empresa.com</td>
+           <td>Manutenção</td>
+           <td>3</td>
+           <td><span class="status-badge status-closed">Ativo</span></td>
+          </tr>
+          <tr>
+           <td>Ana Oliveira</td>
+           <td>ana.oliveira@empresa.com</td>
+           <td>Logística</td>
+           <td>4</td>
+           <td><span class="status-badge status-closed">Ativo</span></td>
+          </tr>
+          <tr>
+           <td>Carlos Mendes</td>
+           <td>carlos.mendes@empresa.com</td>
+           <td>Operações</td>
+           <td>4</td>
+           <td><span class="status-badge status-closed">Ativo</span></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section><!-- Relatórios Section -->
+     <section id="section-relatorio" class="content-section">
+      <div class="section-header">
+       <h2 class="section-title">Relatórios</h2>
+       <p class="section-subtitle">Análises e estatísticas do sistema</p>
+      </div>
+      <div class="card-grid">
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Taxa de Resolução</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         66%
+        </div>
+        <div class="stat-change">
+         +5% vs mês anterior
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Tempo Médio</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><circle cx="12" cy="12" r="10" /> <polyline points="12 6 12 12 16 14" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         5.2
+        </div>
+        <div class="stat-change">
+         dias para resolução
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">RIDs por Mês</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /> <line x1="16" y1="2" x2="16" y2="6" /> <line x1="8" y1="2" x2="8" y2="6" /> <line x1="3" y1="10" x2="21" y2="10" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         8
+        </div>
+        <div class="stat-change">
+         Janeiro 2025
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Departamento Líder</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z" /> <path d="M2 17l10 5 10-5" /> <path d="M2 12l10 5 10-5" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         Qualidade
+        </div>
+        <div class="stat-change">
+         8 RIDs registrados
+        </div>
+       </div>
+      </div>
+      <div class="data-table">
+       <div class="table-header">
+        <h3 class="table-title">Relatório por Departamento</h3>
+        <div class="table-actions"><button class="btn-secondary">Filtrar Período</button> <button class="btn-secondary">Exportar PDF</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
+          <tr>
+           <th>Departamento</th>
+           <th>Total RIDs</th>
+           <th>Abertos</th>
+           <th>Em Análise</th>
+           <th>Concluídos</th>
+           <th>Taxa Conclusão</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>Qualidade</td>
+           <td>8</td>
+           <td>2</td>
+           <td>2</td>
+           <td>4</td>
+           <td>50%</td>
+          </tr>
+          <tr>
+           <td>Produção</td>
+           <td>5</td>
+           <td>1</td>
+           <td>1</td>
+           <td>3</td>
+           <td>60%</td>
+          </tr>
+          <tr>
+           <td>Logística</td>
+           <td>4</td>
+           <td>2</td>
+           <td>0</td>
+           <td>2</td>
+           <td>50%</td>
+          </tr>
+          <tr>
+           <td>Operações</td>
+           <td>4</td>
+           <td>1</td>
+           <td>0</td>
+           <td>3</td>
+           <td>75%</td>
+          </tr>
+          <tr>
+           <td>Manutenção</td>
+           <td>3</td>
+           <td>2</td>
+           <td>0</td>
+           <td>1</td>
+           <td>33%</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section>
+    </div>
+   </main>
+  </div><!-- Employee Dashboard -->
+  <div id="employee-dashboard" class="dashboard-container">
+   <header class="dashboard-header">
+    <div class="header-left">
+     <svg class="header-logo" viewbox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="32" height="32" rx="6" stroke="#e4a40d" stroke-width="2" /> <path d="M13 20L18 25L27 16" stroke="#e4a40d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+     </svg>
+     <h1 class="header-title">Sistema de Gestão de RIDs</h1>
+    </div>
+    <div class="header-right">
+     <div class="user-info">
+      <div id="employee-user-name" class="user-name">
+       Funcionário
+      </div>
+      <div class="user-role">
+       Colaborador
+      </div>
+     </div><button id="employee-logout-btn" class="btn-logout">Sair</button>
+    </div>
+   </header>
+   <main class="dashboard-main">
+    <aside class="sidebar">
+     <nav>
+      <div class="nav-section">
+       <div class="nav-section-title">
+        Menu
+       </div><a class="nav-item active" data-section="employee-dashboard">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
+        </svg> Meus RIDs </a> <a class="nav-item" data-section="employee-new">
+        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="8" x2="12" y2="16" /> <line x1="8" y1="12" x2="16" y2="12" />
+        </svg> Novo RID </a>
+      </div>
+     </nav>
+    </aside>
+    <div class="content-area"><!-- Employee Dashboard Section -->
+     <section id="section-employee-dashboard" class="content-section active">
+      <div class="section-header">
+       <h2 id="employee-welcome" class="section-title">Bem-vindo à sua área de trabalho</h2>
+       <p class="section-subtitle">Visualize e acompanhe seus RIDs registrados</p>
+      </div>
+      <div class="card-grid">
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Meus RIDs</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /> <polyline points="14 2 14 8 20 8" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         5
+        </div>
+        <div class="stat-change">
+         Total registrados
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Em Aberto</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><circle cx="12" cy="12" r="10" /> <polyline points="12 6 12 12 16 14" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         2
+        </div>
+        <div class="stat-change">
+         Aguardando análise
+        </div>
+       </div>
+       <div class="stat-card">
+        <div class="stat-header"><span class="stat-label">Concluídos</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
+         </svg>
+        </div>
+        <div class="stat-value">
+         3
+        </div>
+        <div class="stat-change">
+         Resolvidos
+        </div>
+       </div>
+      </div>
+      <div class="data-table">
+       <div class="table-header">
+        <h3 class="table-title">Meus RIDs Registrados</h3>
+        <div class="table-actions"><button class="btn-secondary">Filtrar</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
+          <tr>
+           <th>ID</th>
+           <th>Assunto</th>
+           <th>Descrição</th>
+           <th>Data</th>
+           <th>Status</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>#RID-001</td>
+           <td>Falha no processo de produção</td>
+           <td>Equipamento apresentou defeito durante operação</td>
+           <td>15/01/2025 14:30</td>
+           <td><span class="status-badge status-open">Aberto</span></td>
+          </tr>
+          <tr>
+           <td>#RID-005</td>
+           <td>Falha de comunicação</td>
+           <td>Informações não repassadas entre turnos</td>
+           <td>11/01/2025 18:00</td>
+           <td><span class="status-badge status-open">Aberto</span></td>
+          </tr>
+          <tr>
+           <td>#RID-008</td>
+           <td>Material inadequado</td>
+           <td>Matéria-prima recebida fora das especificações</td>
+           <td>08/01/2025 11:20</td>
+           <td><span class="status-badge status-closed">Concluído</span></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section><!-- New RID Section -->
+     <section id="section-employee-new" class="content-section">
+      <div class="section-header">
+       <h2 class="section-title">Registrar Novo RID</h2>
+       <p class="section-subtitle">Preencha as informações do registro de incidência</p>
+      </div>
+      <div class="form-card">
+       <form id="new-rid-form">
+        <div class="form-row">
+         <div class="form-group"><label for="rid-subject" class="form-label">Assunto</label> <input type="text" id="rid-subject" name="rid-subject" class="form-input" placeholder="Ex: Falha no equipamento" required>
+         </div>
+         <div class="form-group"><label for="rid-department" class="form-label">Departamento</label> <input type="text" id="rid-department" name="rid-department" class="form-input" placeholder="Ex: Produção" required>
+         </div>
+        </div>
+        <div class="form-group"><label for="rid-description" class="form-label">Descrição Detalhada</label> <textarea id="rid-description" name="rid-description" class="form-input" placeholder="Descreva o que aconteceu, quando, onde e quem estava envolvido..." required></textarea>
+        </div><button type="submit" class="btn-primary">Registrar RID</button>
+       </form>
+      </div>
+     </section>
+    </div>
+   </main>
+  </div>
+  <script>
+    // ========================================
+    // FIREBASE CONFIGURATION
+    // ========================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6yomhHyxKUVYCNjDVzK_ruFO8RYMZvL_k",
+      authDomain: "sistema-rid-001.firebaseapp.com",
+      projectId: "sistema-rid-001",
+      storageBucket: "sistema-rid-001.appspot.com",
+      messagingSenderId: "875061628205",
+      appId: "1:875061628205:web:6bf2a5f9e0a9846d1157a4"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ========================================
+    // FIREBASE FUNCTIONS - FIRESTORE OPERATIONS
+    // ========================================
+    
+    /**
+     * Salvar um novo RID no Firestore
+     * @param {Object} ridData - Dados do RID (assunto, descrição, departamento, etc)
+     * @returns {Promise<string>} - ID do documento criado
+     */
+    async function saveRID(ridData) {
+      try {
+        const docRef = await db.collection('rids').add({
+          ...ridData,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('RID salvo com ID:', docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error('Erro ao salvar RID:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Buscar todos os RIDs do Firestore
+     * @returns {Promise<Array>} - Array com todos os RIDs
+     */
+    async function getAllRIDs() {
+      try {
+        const snapshot = await db.collection('rids')
+          .orderBy('createdAt', 'desc')
+          .get();
+        
+        const rids = [];
+        snapshot.forEach(doc => {
+          rids.push({ id: doc.id, ...doc.data() });
+        });
+        
+        console.log('RIDs carregados:', rids.length);
+        return rids;
+      } catch (error) {
+        console.error('Erro ao buscar RIDs:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Buscar RIDs de um funcionário específico
+     * @param {string} userId - ID do usuário
+     * @returns {Promise<Array>} - Array com os RIDs do funcionário
+     */
+    async function getRIDsByUser(userId) {
+      try {
+        const snapshot = await db.collection('rids')
+          .where('userId', '==', userId)
+          .orderBy('createdAt', 'desc')
+          .get();
+        
+        const rids = [];
+        snapshot.forEach(doc => {
+          rids.push({ id: doc.id, ...doc.data() });
+        });
+        
+        console.log('RIDs do usuário carregados:', rids.length);
+        return rids;
+      } catch (error) {
+        console.error('Erro ao buscar RIDs do usuário:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Atualizar status de um RID
+     * @param {string} ridId - ID do RID
+     * @param {string} newStatus - Novo status (aberto, em_analise, concluido)
+     * @returns {Promise<void>}
+     */
+    async function updateRIDStatus(ridId, newStatus) {
+      try {
+        await db.collection('rids').doc(ridId).update({
+          status: newStatus,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('Status do RID atualizado:', ridId);
+      } catch (error) {
+        console.error('Erro ao atualizar status:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Deletar um RID
+     * @param {string} ridId - ID do RID a ser deletado
+     * @returns {Promise<void>}
+     */
+    async function deleteRID(ridId) {
+      try {
+        await db.collection('rids').doc(ridId).delete();
+        console.log('RID deletado:', ridId);
+      } catch (error) {
+        console.error('Erro ao deletar RID:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Salvar dados de um funcionário
+     * @param {Object} employeeData - Dados do funcionário
+     * @returns {Promise<string>} - ID do documento criado
+     */
+    async function saveEmployee(employeeData) {
+      try {
+        const docRef = await db.collection('employees').add({
+          ...employeeData,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('Funcionário salvo com ID:', docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error('Erro ao salvar funcionário:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Buscar todos os funcionários
+     * @returns {Promise<Array>} - Array com todos os funcionários
+     */
+    async function getAllEmployees() {
+      try {
+        const snapshot = await db.collection('employees').get();
+        
+        const employees = [];
+        snapshot.forEach(doc => {
+          employees.push({ id: doc.id, ...doc.data() });
+        });
+        
+        console.log('Funcionários carregados:', employees.length);
+        return employees;
+      } catch (error) {
+        console.error('Erro ao buscar funcionários:', error);
+        throw error;
+      }
+    }
+
+    /**
+     * Escutar mudanças em tempo real nos RIDs
+     * @param {Function} callback - Função chamada quando há mudanças
+     * @returns {Function} - Função para cancelar a escuta
+     */
+    function listenToRIDs(callback) {
+      return db.collection('rids')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(snapshot => {
+          const rids = [];
+          snapshot.forEach(doc => {
+            rids.push({ id: doc.id, ...doc.data() });
+          });
+          callback(rids);
+        }, error => {
+          console.error('Erro ao escutar RIDs:', error);
+        });
+    }
+
+    // ========================================
+    // ELEMENT SDK CONFIG
+    // ========================================
+    const defaultConfig = {
+      system_title: "Sistema de Gestão de RIDs",
+      login_subtitle: "Acesse sua conta para continuar",
+      admin_welcome: "Bem-vindo ao painel administrativo",
+      employee_welcome: "Bem-vindo à sua área de trabalho",
+      background_color: "#d5d5d5",
+      accent_color: "#e4a40d",
+      text_primary: "#2c2c2c",
+      text_secondary: "#8c8c8c",
+      surface_color: "#ffffff",
+      font_family: "Inter",
+      font_size: 14
+    };
+
+    function applyConfig(config) {
+      const cfg = { ...defaultConfig, ...config };
+      const baseFontStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      const fullFont = `${cfg.font_family}, ${baseFontStack}`;
+
+      document.body.style.fontFamily = fullFont;
+      document.body.style.fontSize = cfg.font_size + "px";
+      document.body.style.background = cfg.background_color;
+
+      const systemTitle = document.getElementById("system-title");
+      const loginSubtitle = document.getElementById("login-subtitle");
+      const adminWelcome = document.getElementById("admin-welcome");
+      const employeeWelcome = document.getElementById("employee-welcome");
+      const headerTitle = document.getElementById("header-title");
+
+      if (systemTitle) systemTitle.textContent = cfg.system_title;
+      if (loginSubtitle) loginSubtitle.textContent = cfg.login_subtitle;
+      if (adminWelcome) adminWelcome.textContent = cfg.admin_welcome;
+      if (employeeWelcome) employeeWelcome.textContent = cfg.employee_welcome;
+      if (headerTitle) headerTitle.textContent = cfg.system_title;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => {
+          const cfg = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              {
+                get: () => cfg.background_color,
+                set: (value) => window.elementSdk.setConfig({ background_color: value })
+              },
+              {
+                get: () => cfg.accent_color,
+                set: (value) => window.elementSdk.setConfig({ accent_color: value })
+              },
+              {
+                get: () => cfg.text_primary,
+                set: (value) => window.elementSdk.setConfig({ text_primary: value })
+              },
+              {
+                get: () => cfg.text_secondary,
+                set: (value) => window.elementSdk.setConfig({ text_secondary: value })
+              },
+              {
+                get: () => cfg.surface_color,
+                set: (value) => window.elementSdk.setConfig({ surface_color: value })
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => cfg.font_family,
+              set: (value) => window.elementSdk.setConfig({ font_family: value })
+            },
+            fontSizeable: {
+              get: () => cfg.font_size,
+              set: (value) => window.elementSdk.setConfig({ font_size: value })
+            }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const cfg = { ...defaultConfig, ...config };
+          return new Map([
+            ["system_title", cfg.system_title],
+            ["login_subtitle", cfg.login_subtitle],
+            ["admin_welcome", cfg.admin_welcome],
+            ["employee_welcome", cfg.employee_welcome]
+          ]);
+        }
+      });
+    }
+
+    applyConfig(defaultConfig);
+
+    // Login System
+    const loginScreen = document.getElementById("login-screen");
+    const adminDashboard = document.getElementById("admin-dashboard");
+    const employeeDashboard = document.getElementById("employee-dashboard");
+    const loginForm = document.getElementById("login-form");
+
+    const users = {
+      admin: { password: "admin123", role: "admin", name: "Administrador" },
+      funcionario: { password: "func123", role: "employee", name: "João Silva" }
+    };
+
+    let currentUser = null;
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const user = users[username];
+      if (user && user.password === password) {
+        currentUser = { username, ...user };
+        loginScreen.style.display = "none";
+
+        if (user.role === "admin") {
+    adminDashboard.classList.add("active");
+    document.getElementById("user-name").textContent = user.name;
+
+    // 🔥 Ativar carregamento e escuta em tempo real dos RIDs
+    loadRIDsFromFirebase();
+    startListeningToRIDs();
+
+} else {
+    employeeDashboard.classList.add("active");
+    document.getElementById("employee-user-name").textContent = user.name;
+}
+
+      } else {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = "Usuário ou senha incorretos";
+        messageDiv.style.cssText = "margin-top: 12px; padding: 12px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; font-size: 13px; text-align: center;";
+        
+        const existingMessage = loginForm.querySelector("div[style*='background: #fee']");
+        if (existingMessage) existingMessage.remove();
+        
+        loginForm.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 3000);
+      }
+    });
+
+    // Logout
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      adminDashboard.classList.remove("active");
+      loginScreen.style.display = "flex";
+      loginForm.reset();
+      currentUser = null;
+    });
+
+    document.getElementById("employee-logout-btn").addEventListener("click", () => {
+      employeeDashboard.classList.remove("active");
+      loginScreen.style.display = "flex";
+      loginForm.reset();
+      currentUser = null;
+    });
+
+    // Navigation
+    function setupNavigation(dashboardId) {
+      const dashboard = document.getElementById(dashboardId);
+      const navItems = dashboard.querySelectorAll(".nav-item");
+      const sections = dashboard.querySelectorAll(".content-section");
+
+      navItems.forEach(item => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          const sectionId = item.getAttribute("data-section");
+
+          navItems.forEach(nav => nav.classList.remove("active"));
+          item.classList.add("active");
+
+          sections.forEach(section => section.classList.remove("active"));
+          const targetSection = dashboard.querySelector(`#section-${sectionId}`);
+          if (targetSection) targetSection.classList.add("active");
+        });
+      });
+    }
+
+    setupNavigation("admin-dashboard");
+    setupNavigation("employee-dashboard");
+
+    // New RID Form with Firebase Integration
+    const newRidForm = document.getElementById("new-rid-form");
+    if (newRidForm) {
+      newRidForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        // Desabilitar botão durante envio
+        const submitBtn = newRidForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Salvando...";
+        
+        try {
+          // Coletar dados do formulário
+          const ridData = {
+            subject: document.getElementById("rid-subject").value,
+            department: document.getElementById("rid-department").value,
+            description: document.getElementById("rid-description").value,
+            userId: currentUser ? currentUser.username : 'unknown',
+            userName: currentUser ? currentUser.name : 'Desconhecido',
+            status: 'aberto'
+          };
+          
+          // Salvar no Firebase
+          const ridId = await saveRID(ridData);
+          
+          // Mostrar mensagem de sucesso
+          const messageDiv = document.createElement("div");
+          messageDiv.textContent = `✓ RID #${ridId.substring(0, 8)} registrado com sucesso no Firebase!`;
+          messageDiv.style.cssText = "margin-top: 16px; padding: 16px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;";
+          
+          const existingMessage = newRidForm.querySelector("div[style*='background: #e8f5e9'], div[style*='background: #fee']");
+          if (existingMessage) existingMessage.remove();
+          
+          newRidForm.appendChild(messageDiv);
+          newRidForm.reset();
+          
+          setTimeout(() => messageDiv.remove(), 4000);
+          
+        } catch (error) {
+          // Mostrar mensagem de erro
+          const errorDiv = document.createElement("div");
+          errorDiv.textContent = "✗ Erro ao salvar RID. Tente novamente.";
+          errorDiv.style.cssText = "margin-top: 16px; padding: 16px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; font-size: 14px; text-align: center;";
+          
+          const existingMessage = newRidForm.querySelector("div[style*='background: #e8f5e9'], div[style*='background: #fee']");
+          if (existingMessage) existingMessage.remove();
+          
+          newRidForm.appendChild(errorDiv);
+          
+          setTimeout(() => errorDiv.remove(), 4000);
+        } finally {
+          // Reabilitar botão
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+    }
+    
+    // ========================================
+// ATUALIZA TABELA DE RIDS DO ADMIN
+// ========================================
+function updateAdminRIDsTable(rids) {
+  const tableBody = document.querySelector('#section-rids table tbody');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = ""; // limpar tabela
+
+  rids.forEach(rid => {
+    const date = rid.createdAt?.toDate 
+      ? rid.createdAt.toDate().toLocaleString()
+      : "—";
+
+    const row = `
+      <tr>
+        <td>${rid.id.substring(0, 8).toUpperCase()}</td>
+        <td>${rid.subject || "—"}</td>
+        <td>${rid.description || "—"}</td>
+        <td>${rid.userName || "—"}</td>
+        <td>${date}</td>
+        <td><span class="status-badge status-open">${rid.status || "aberto"}</span></td>
+      </tr>
+    `;
+    tableBody.innerHTML += row;
+  });
+}
+
+    
+    // ========================================
+// ESCUTA EM TEMPO REAL
+// ========================================
+let unsubscribe = null;
+
+function startListeningToRIDs() {
+  unsubscribe = listenToRIDs((rids) => {
+    console.log('RIDs atualizados em tempo real:', rids);
+    updateAdminRIDsTable(rids);
+  });
+}
+
+function stopListeningToRIDs() {
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
+}
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a43e50863ed261c',t:'MTc2NDEwMjUyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
