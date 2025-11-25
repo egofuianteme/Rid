@@ -221,45 +221,43 @@
     /* Main Layout */
     .dashboard-main {
       display: flex;
+      flex-direction: column;
       flex: 1;
       overflow: hidden;
     }
     
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
+    /* Horizontal Navigation Bar */
+    .nav-bar {
       background: white;
-      border-right: 1px solid #e0e0e0;
-      padding: 24px 0;
-      overflow-y: auto;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0 32px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
     }
     
     .nav-section {
-      margin-bottom: 32px;
+      display: flex;
+      gap: 8px;
     }
     
     .nav-section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: #8c8c8c;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 0 24px;
-      margin-bottom: 12px;
+      display: none;
     }
     
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
+      gap: 8px;
+      padding: 16px 20px;
       color: #8c8c8c;
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
       transition: all 0.2s;
       cursor: pointer;
-      border-left: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
     }
     
     .nav-item:hover {
@@ -268,9 +266,9 @@
     }
     
     .nav-item.active {
-      background: #fef9ed;
       color: #e4a40d;
-      border-left-color: #e4a40d;
+      border-bottom-color: #e4a40d;
+      background: #fef9ed;
     }
     
     .nav-icon {
@@ -365,6 +363,26 @@
     .stat-change {
       font-size: 13px;
       color: #8c8c8c;
+    }
+    
+    /* Filter Panel */
+    .filter-panel {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #f8f8f8;
+    }
+    
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 16px;
+      align-items: end;
+    }
+    
+    @media (max-width: 768px) {
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
     }
     
     /* Table */
@@ -489,12 +507,194 @@
       font-family: inherit;
     }
     
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: #8c8c8c;
+    }
+    
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      opacity: 0.3;
+    }
+    
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c2c2c;
+      margin-bottom: 8px;
+    }
+    
+    .empty-state-text {
+      font-size: 14px;
+      color: #8c8c8c;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90%;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+      padding: 24px 32px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+      border-radius: 16px 16px 0 0;
+    }
+    
+    .modal-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+    
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .modal-close:hover {
+      background: #f5f5f5;
+    }
+    
+    .modal-body {
+      padding: 32px;
+    }
+    
+    .form-section {
+      margin-bottom: 32px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c2c2c;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e4a40d;
+    }
+    
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .radio-option, .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .radio-option:hover, .checkbox-option:hover {
+      border-color: #e4a40d;
+      background: #fef9ed;
+    }
+    
+    .radio-option input[type="radio"],
+    .checkbox-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #e4a40d;
+    }
+    
+    .radio-option label,
+    .checkbox-option label {
+      cursor: pointer;
+      flex: 1;
+      font-size: 14px;
+      color: #2c2c2c;
+    }
+    
+    .radio-option input[type="radio"]:checked ~ label,
+    .checkbox-option input[type="checkbox"]:checked ~ label {
+      font-weight: 600;
+    }
+    
+    .modal-footer {
+      padding: 24px 32px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-radius: 0 0 16px 16px;
+    }
+    
+    .btn-cancel {
+      padding: 12px 24px;
+      background: transparent;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8c8c8c;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-cancel:hover {
+      border-color: #8c8c8c;
+      color: #2c2c2c;
+    }
+    
+    .help-text {
+      font-size: 12px;
+      color: #8c8c8c;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
-      .sidebar {
-        width: 200px;
-      }
-      
       .content-area {
         padding: 20px;
       }
@@ -510,20 +710,23 @@
       .user-info {
         display: none;
       }
-    }
-    
-    @media (max-width: 640px) {
-      .sidebar {
-        position: fixed;
-        left: -260px;
-        top: 0;
-        height: 100%;
-        z-index: 100;
-        transition: left 0.3s;
+      
+      .nav-bar {
+        padding: 0 20px;
       }
       
-      .sidebar.mobile-open {
-        left: 0;
+      .modal-content {
+        max-height: 95%;
+      }
+      
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 20px;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
       }
     }
     
@@ -536,7 +739,136 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body><!-- Login Screen -->
+ <body><!-- Modal Novo RID -->
+  <div id="modal-novo-rid" class="modal-overlay">
+   <div class="modal-content">
+    <div class="modal-header">
+     <h2 class="modal-title">Novo RID</h2><button type="button" class="modal-close" id="close-modal-rid">
+      <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+      </svg></button>
+    </div>
+    <form id="form-novo-rid">
+     <div class="modal-body"><!-- 1. Emitente -->
+      <div class="form-section">
+       <h3 class="form-section-title">1. Emitente</h3>
+       <div class="form-group"><label for="emitente" class="form-label">Nome do Emitente</label> <input type="text" id="emitente" name="emitente" class="form-input" placeholder="Digite o nome do emitente" required>
+       </div>
+      </div><!-- 2. Tipo de contrato -->
+      <div class="form-section">
+       <h3 class="form-section-title">2. Tipo de Contrato</h3>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="tipo-funcionario" name="tipo_contrato" value="funcionario" required> <label for="tipo-funcionario">Funcionário</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="tipo-terceiro-contratado" name="tipo_contrato" value="terceiro_contratado"> <label for="tipo-terceiro-contratado">Terceiro Contratado</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="tipo-terceiro-eventual" name="tipo_contrato" value="terceiro_eventual"> <label for="tipo-terceiro-eventual">Terceiro Eventual</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="tipo-visitante" name="tipo_contrato" value="visitante"> <label for="tipo-visitante">Visitante</label>
+        </div>
+       </div>
+      </div><!-- 3. Unidade -->
+      <div class="form-section">
+       <h3 class="form-section-title">3. Unidade</h3>
+       <div class="form-group"><label for="unidade" class="form-label">Unidade</label> <input type="text" id="unidade" name="unidade" class="form-input" placeholder="Digite a unidade" required>
+       </div>
+      </div><!-- 4. Setor do emitente -->
+      <div class="form-section">
+       <h3 class="form-section-title">4. Setor do Emitente</h3>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="setor-adm" name="setor" value="ADM" required> <label for="setor-adm">ADM</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="setor-movel" name="setor" value="M. MOVEL"> <label for="setor-movel">M. MOVEL</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="setor-fixa" name="setor" value="M. FIXA"> <label for="setor-fixa">M. FIXA</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="setor-eletrica" name="setor" value="M. ELÉTRICA"> <label for="setor-eletrica">M. ELÉTRICA</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="setor-producao" name="setor" value="PRODUÇÃO"> <label for="setor-producao">PRODUÇÃO</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="setor-mina" name="setor" value="MINA"> <label for="setor-mina">MINA</label>
+        </div>
+       </div>
+      </div><!-- 5. Data -->
+      <div class="form-section">
+       <h3 class="form-section-title">5. Data</h3>
+       <div class="form-group"><label for="data-ocorrencia" class="form-label">Data da Ocorrência</label> <input type="date" id="data-ocorrencia" name="data_ocorrencia" class="form-input" required>
+       </div>
+      </div><!-- 6. Incidente ou Desvios -->
+      <div class="form-section">
+       <h3 class="form-section-title">6. Incidente ou Desvios</h3>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="incidente-risco" name="incidente" value="condicao_risco" required> <label for="incidente-risco">Condição de Risco</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="incidente-comportamental" name="incidente" value="desvio_comportamental"> <label for="incidente-comportamental">Desvio Comportamental</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="incidente-dano" name="incidente" value="dano_material"> <label for="incidente-dano">Dano Material</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="incidente-quase" name="incidente" value="quase_acidente"> <label for="incidente-quase">Quase acidente</label>
+        </div>
+       </div>
+      </div><!-- 7. Origem da detecção -->
+      <div class="form-section">
+       <h3 class="form-section-title">7. Origem da Detecção</h3>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="origem-csl" name="origem" value="CSL" required> <label for="origem-csl">CSL</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="origem-programada" name="origem" value="inspecao_programada"> <label for="origem-programada">Inspeção programada</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="origem-nao-programada" name="origem" value="inspecao_nao_programada"> <label for="origem-nao-programada">Inspeção não programada</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="origem-comportamental" name="origem" value="observacao_comportamental"> <label for="origem-comportamental">Observação Comportamental</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="origem-espontanea" name="origem" value="constatacao_espontanea"> <label for="origem-espontanea">Constatação espontânea</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="origem-auditoria" name="origem" value="auditoria"> <label for="origem-auditoria">Auditoria</label>
+        </div>
+       </div>
+      </div><!-- 8. Local da ocorrência -->
+      <div class="form-section">
+       <h3 class="form-section-title">8. Local da Ocorrência</h3>
+       <div class="form-group"><label for="local" class="form-label">Local</label> <input type="text" id="local" name="local" class="form-input" placeholder="Digite o local da ocorrência" required>
+       </div>
+      </div><!-- 9. Descrição da Ocorrência -->
+      <div class="form-section">
+       <h3 class="form-section-title">9. Descrição da Ocorrência</h3>
+       <div class="form-group"><label for="descricao" class="form-label">Descrição Detalhada</label> <textarea id="descricao" name="descricao" class="form-input" placeholder="Descreva detalhadamente o que aconteceu..." rows="5" required></textarea>
+       </div>
+      </div><!-- 10. Classificação de risco -->
+      <div class="form-section">
+       <h3 class="form-section-title">10. Classificação de Risco</h3>
+       <p class="help-text" style="margin-bottom: 12px;"><strong>Baixo:</strong> Situa����ões com baixo potencial de causar acidente.<br><strong>Médio:</strong> Situações que podem causar acidente leve se não forem corrigidas.<br><strong>Alto:</strong> Situações com alto potencial de causar acidente grave ou incapacitante.<br><strong>Crítico:</strong> Situações com risco iminente de acidente grave ou fatal.</p>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="risco-baixo" name="risco" value="baixo" required> <label for="risco-baixo">Baixo</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="risco-medio" name="risco" value="medio"> <label for="risco-medio">Médio</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="risco-alto" name="risco" value="alto"> <label for="risco-alto">Alto</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="risco-critico" name="risco" value="critico"> <label for="risco-critico">Crítico</label>
+        </div>
+       </div>
+      </div><!-- 11. Ação Imediata -->
+      <div class="form-section">
+       <h3 class="form-section-title">11. Ação Imediata</h3>
+       <div class="form-group"><label for="acao-imediata" class="form-label">Ação Imediata Tomada</label> <textarea id="acao-imediata" name="acao_imediata" class="form-input" placeholder="Descreva a ação imediata tomada..." rows="4" required></textarea>
+       </div>
+      </div><!-- 12. Status -->
+      <div class="form-section">
+       <h3 class="form-section-title">12. Status</h3>
+       <p class="help-text" style="margin-bottom: 12px;"><strong>CORRIGIDO:</strong> RID que já foi resolvido.<br><strong>VENCIDO:</strong> RID pendente que vai ser passado para um encarregado resolver.</p>
+       <div class="radio-group">
+        <div class="radio-option"><input type="radio" id="status-corrigido" name="status" value="corrigido" required> <label for="status-corrigido">CORRIGIDO</label>
+        </div>
+        <div class="radio-option"><input type="radio" id="status-vencido" name="status" value="vencido"> <label for="status-vencido">VENCIDO</label>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="modal-footer"><button type="button" class="btn-cancel" id="cancel-modal-rid">Cancelar</button> <button type="submit" class="btn-primary">Registrar RID</button>
+     </div>
+    </form>
+   </div>
+  </div><!-- Login Screen -->
   <div id="login-screen" class="app-container">
    <div class="login-wrapper">
     <div class="login-card">
@@ -552,16 +884,6 @@
       <div class="form-group"><label for="password" class="form-label">Senha</label> <input type="text" id="password" name="password" class="form-input" placeholder="Digite sua senha" required>
       </div><button type="submit" class="btn-primary">Entrar</button>
      </form>
-     <div class="login-hint"><strong>💡 Credenciais de teste:</strong>
-      <div style="margin-top: 8px;">
-       <div>
-        <strong>Admin:</strong> admin / admin123
-       </div>
-       <div style="margin-top: 4px;">
-        <strong>Funcionário:</strong> funcionario / func123
-       </div>
-      </div>
-     </div>
     </div>
    </div>
   </div><!-- Admin Dashboard -->
@@ -584,23 +906,18 @@
     </div>
    </header>
    <main class="dashboard-main">
-    <aside class="sidebar">
-     <nav>
-      <div class="nav-section">
-       <div class="nav-section-title">
-        Menu Principal
-       </div><a class="nav-item active" data-section="dashboard">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
-        </svg> Dashboard </a> <a class="nav-item" data-section="rids">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /> <polyline points="14 2 14 8 20 8" /> <line x1="16" y1="13" x2="8" y2="13" /> <line x1="16" y1="17" x2="8" y2="17" /> <polyline points="10 9 9 9 8 9" />
-        </svg> RIDs </a> <a class="nav-item" data-section="funcionarios">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg> Funcionários </a> <a class="nav-item" data-section="relatorio">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10" /> <line x1="12" y1="20" x2="12" y2="4" /> <line x1="6" y1="20" x2="6" y2="14" />
-        </svg> Relatórios </a>
-      </div>
-     </nav>
-    </aside>
+    <nav class="nav-bar">
+     <div class="nav-section"><a class="nav-item active" data-section="dashboard">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
+       </svg> Dashboard </a> <a class="nav-item" data-section="rids">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /> <polyline points="14 2 14 8 20 8" /> <line x1="16" y1="13" x2="8" y2="13" /> <line x1="16" y1="17" x2="8" y2="17" /> <polyline points="10 9 9 9 8 9" />
+       </svg> RIDs </a> <a class="nav-item" data-section="funcionarios">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+       </svg> Funcionários </a> <a class="nav-item" data-section="relatorio">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10" /> <line x1="12" y1="20" x2="12" y2="4" /> <line x1="6" y1="20" x2="6" y2="14" />
+       </svg> Relatórios </a>
+     </div>
+    </nav>
     <div class="content-area"><!-- Dashboard Section -->
      <section id="section-dashboard" class="content-section active">
       <div class="section-header">
@@ -614,10 +931,10 @@
          </svg>
         </div>
         <div class="stat-value">
-         24
+         0
         </div>
         <div class="stat-change">
-         +3 este mês
+         Nenhum RID registrado
         </div>
        </div>
        <div class="stat-card">
@@ -626,46 +943,58 @@
          </svg>
         </div>
         <div class="stat-value">
-         8
+         0
         </div>
         <div class="stat-change">
-         Requer atenção
+         Nenhum pendente
         </div>
        </div>
        <div class="stat-card">
-        <div class="stat-header"><span class="stat-label">Funcionários</span>
-         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        <div class="stat-header"><span class="stat-label">Vencidos</span>
+         <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" /> <line x1="12" y1="8" x2="12.01" y2="8" />
          </svg>
         </div>
         <div class="stat-value">
-         12
+         0
         </div>
         <div class="stat-change">
-         Ativos no sistema
+         Nenhum vencido
         </div>
        </div>
        <div class="stat-card">
-        <div class="stat-header"><span class="stat-label">Concluídos</span>
+        <div class="stat-header"><span class="stat-label">Corrigidos</span>
          <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
          </svg>
         </div>
         <div class="stat-value">
-         16
+         0
         </div>
         <div class="stat-change">
-         66% taxa de conclusão
+         Nenhum corrigido
         </div>
        </div>
       </div>
       <div class="data-table">
        <div class="table-header">
         <h3 class="table-title">RIDs Recentes</h3>
-        <div class="table-actions"><button class="btn-secondary">Filtrar</button> <button class="btn-secondary">Exportar</button>
+        <div class="table-actions"><button id="btn-filter-recent" class="btn-secondary">Filtrar</button>
+        </div>
+       </div><!-- Filter Panel for Recent RIDs -->
+       <div id="recent-filter-panel" class="filter-panel" style="display: none;">
+        <div class="filter-grid" style="grid-template-columns: 1fr 1fr 1fr auto;">
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-recent-start" class="form-label">Data Inicial</label> <input type="date" id="filter-recent-start" class="form-input">
+         </div>
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-recent-end" class="form-label">Data Final</label> <input type="date" id="filter-recent-end" class="form-input">
+         </div>
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-recent-status" class="form-label">Status</label> <select id="filter-recent-status" class="form-input"> <option value="">Todos</option> <option value="aberto">Aberto</option> <option value="em_analise">Em Análise</option> <option value="concluido">Concluído</option> </select>
+         </div>
+         <div style="display: flex; gap: 8px; align-items: end;"><button id="btn-apply-recent-filter" class="btn-primary" style="width: auto; padding: 12px 24px;">Aplicar</button> <button id="btn-clear-recent-filter" class="btn-secondary" style="padding: 12px 16px;">Limpar</button>
+         </div>
         </div>
        </div>
-       <div class="table-content">
+       <div class="table-content" style="max-height: 350px; overflow-y: auto;">
         <table>
-         <thead>
+         <thead style="position: sticky; top: 0; z-index: 10;">
           <tr>
            <th>ID</th>
            <th>Assunto</th>
@@ -674,28 +1003,50 @@
            <th>Status</th>
           </tr>
          </thead>
-         <tbody>
+         <tbody id="recent-rids-tbody">
           <tr>
-           <td>#RID-001</td>
-           <td>Falha no processo de produção</td>
-           <td>João Silva</td>
-           <td>15/01/2025</td>
-           <td><span class="status-badge status-open">Aberto</span></td>
+           <td colspan="5">
+            <div class="empty-state">
+             <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="8" x2="12" y2="12" /> <line x1="12" y1="16" x2="12.01" y2="16" />
+             </svg>
+             <div class="empty-state-title">
+              Nenhum RID encontrado
+             </div>
+             <div class="empty-state-text">
+              Registre um novo RID para começar
+             </div>
+            </div></td>
           </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="data-table" style="margin-top: 32px;">
+       <div class="table-header">
+        <h3 class="table-title">🏆 Top 3 Funcionários com Mais RIDs - <span id="ranking-period"></span></h3>
+        <div class="table-actions"><button id="btn-filter-ranking" class="btn-secondary">Filtrar</button>
+        </div>
+       </div><!-- Filter Panel -->
+       <div id="ranking-filter-panel" class="filter-panel" style="display: none;">
+        <div class="filter-grid">
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-month" class="form-label">Mês</label> <select id="filter-month" class="form-input"> <option value="01">Janeiro</option> <option value="02">Fevereiro</option> <option value="03">Março</option> <option value="04">Abril</option> <option value="05">Maio</option> <option value="06">Junho</option> <option value="07">Julho</option> <option value="08">Agosto</option> <option value="09">Setembro</option> <option value="10">Outubro</option> <option value="11">Novembro</option> <option value="12">Dezembro</option> </select>
+         </div>
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-year" class="form-label">Ano</label> <input type="number" id="filter-year" class="form-input" placeholder="Ex: 2025" min="2025" max="2100" value="2025" required>
+         </div><button id="btn-apply-filter" class="btn-primary" style="width: auto; padding: 12px 24px;">Aplicar</button>
+        </div>
+       </div>
+       <div class="table-content">
+        <table>
+         <thead>
           <tr>
-           <td>#RID-002</td>
-           <td>Incidente de segurança</td>
-           <td>Maria Santos</td>
-           <td>14/01/2025</td>
-           <td><span class="status-badge status-progress">Em análise</span></td>
+           <th style="width: 80px;">Posição</th>
+           <th>Funcionário</th>
+           <th>Departamento</th>
+           <th style="width: 120px;">Total RIDs</th>
+           <th style="width: 150px;">Última Atualização</th>
           </tr>
-          <tr>
-           <td>#RID-003</td>
-           <td>Não conformidade qualidade</td>
-           <td>Pedro Costa</td>
-           <td>13/01/2025</td>
-           <td><span class="status-badge status-closed">Concluído</span></td>
-          </tr>
+         </thead>
+         <tbody id="ranking-tbody"><!-- Ranking será carregado dinamicamente -->
          </tbody>
         </table>
        </div>
@@ -709,61 +1060,48 @@
       <div class="data-table">
        <div class="table-header">
         <h3 class="table-title">Todos os RIDs</h3>
-        <div class="table-actions"><button class="btn-secondary">Novo RID</button> <button class="btn-secondary">Filtrar</button> <button class="btn-secondary">Exportar</button>
+        <div class="table-actions"><button id="btn-novo-rid-admin" class="btn-secondary">Novo RID</button> <button id="btn-filter-all-rids" class="btn-secondary">Filtrar</button>
+        </div>
+       </div><!-- Filter Panel for All RIDs -->
+       <div id="all-rids-filter-panel" class="filter-panel" style="display: none;">
+        <div class="filter-grid" style="grid-template-columns: 1fr 1fr 1fr auto;">
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-all-rids-start" class="form-label">Data Inicial</label> <input type="date" id="filter-all-rids-start" class="form-input">
+         </div>
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-all-rids-end" class="form-label">Data Final</label> <input type="date" id="filter-all-rids-end" class="form-input">
+         </div>
+         <div class="form-group" style="margin-bottom: 0;"><label for="filter-all-rids-status" class="form-label">Status</label> <select id="filter-all-rids-status" class="form-input"> <option value="">Todos</option> <option value="corrigido">Corrigido</option> <option value="vencido">Vencido</option> </select>
+         </div>
+         <div style="display: flex; gap: 8px; align-items: end;"><button id="btn-apply-all-rids-filter" class="btn-primary" style="width: auto; padding: 12px 24px;">Aplicar</button> <button id="btn-clear-all-rids-filter" class="btn-secondary" style="padding: 12px 16px;">Limpar</button>
+         </div>
         </div>
        </div>
-       <div class="table-content">
+       <div class="table-content" style="max-height: 600px; overflow-y: auto;">
         <table>
-         <thead>
+         <thead style="position: sticky; top: 0; z-index: 10;">
           <tr>
            <th>ID</th>
-           <th>Assunto</th>
+           <th>Emitente</th>
+           <th>Setor</th>
+           <th>Local</th>
            <th>Descrição</th>
-           <th>Funcionário</th>
+           <th>Risco</th>
            <th>Data</th>
            <th>Status</th>
           </tr>
          </thead>
-         <tbody>
+         <tbody id="all-rids-tbody">
           <tr>
-           <td>#RID-001</td>
-           <td>Falha no processo de produção</td>
-           <td>Equipamento apresentou defeito durante operação</td>
-           <td>João Silva</td>
-           <td>15/01/2025 14:30</td>
-           <td><span class="status-badge status-open">Aberto</span></td>
-          </tr>
-          <tr>
-           <td>#RID-002</td>
-           <td>Incidente de segurança</td>
-           <td>Quase acidente na área de montagem</td>
-           <td>Maria Santos</td>
-           <td>14/01/2025 10:15</td>
-           <td><span class="status-badge status-progress">Em análise</span></td>
-          </tr>
-          <tr>
-           <td>#RID-003</td>
-           <td>Não conformidade qualidade</td>
-           <td>Produto fora das especifica��ões técnicas</td>
-           <td>Pedro Costa</td>
-           <td>13/01/2025 16:45</td>
-           <td><span class="status-badge status-closed">Concluído</span></td>
-          </tr>
-          <tr>
-           <td>#RID-004</td>
-           <td>Atraso na entrega</td>
-           <td>Fornecedor não cumpriu prazo acordado</td>
-           <td>Ana Oliveira</td>
-           <td>12/01/2025 09:20</td>
-           <td><span class="status-badge status-closed">Concluído</span></td>
-          </tr>
-          <tr>
-           <td>#RID-005</td>
-           <td>Falha de comunicação</td>
-           <td>Informações não repassadas entre turnos</td>
-           <td>Carlos Mendes</td>
-           <td>11/01/2025 18:00</td>
-           <td><span class="status-badge status-open">Aberto</span></td>
+           <td colspan="8">
+            <div class="empty-state">
+             <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <polyline points="12 6 12 12 16 14" />
+             </svg>
+             <div class="empty-state-title">
+              Carregando RIDs...
+             </div>
+             <div class="empty-state-text">
+              Aguarde enquanto buscamos os dados
+             </div>
+            </div></td>
           </tr>
          </tbody>
         </table>
@@ -824,7 +1162,7 @@
           <tr>
            <td>Carlos Mendes</td>
            <td>carlos.mendes@empresa.com</td>
-           <td>Operações</td>
+           <td>Operaç��es</td>
            <td>4</td>
            <td><span class="status-badge status-closed">Ativo</span></td>
           </tr>
@@ -845,10 +1183,10 @@
          </svg>
         </div>
         <div class="stat-value">
-         66%
+         0%
         </div>
         <div class="stat-change">
-         +5% vs mês anterior
+         Sem dados
         </div>
        </div>
        <div class="stat-card">
@@ -857,10 +1195,10 @@
          </svg>
         </div>
         <div class="stat-value">
-         5.2
+         0
         </div>
         <div class="stat-change">
-         dias para resolução
+         Sem dados
         </div>
        </div>
        <div class="stat-card">
@@ -869,7 +1207,7 @@
          </svg>
         </div>
         <div class="stat-value">
-         8
+         0
         </div>
         <div class="stat-change">
          Janeiro 2025
@@ -881,10 +1219,10 @@
          </svg>
         </div>
         <div class="stat-value">
-         Qualidade
+         -
         </div>
         <div class="stat-change">
-         8 RIDs registrados
+         Sem dados
         </div>
        </div>
       </div>
@@ -940,7 +1278,7 @@
            <td>75%</td>
           </tr>
           <tr>
-           <td>Manutenção</td>
+           <td>Manutenç����o</td>
            <td>3</td>
            <td>2</td>
            <td>0</td>
@@ -974,23 +1312,18 @@
     </div>
    </header>
    <main class="dashboard-main">
-    <aside class="sidebar">
-     <nav>
-      <div class="nav-section">
-       <div class="nav-section-title">
-        Menu
-       </div><a class="nav-item active" data-section="employee-dashboard">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
-        </svg> Meus RIDs </a> <a class="nav-item" data-section="employee-new">
-        <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="8" x2="12" y2="16" /> <line x1="8" y1="12" x2="16" y2="12" />
-        </svg> Novo RID </a>
-      </div>
-     </nav>
-    </aside>
+    <nav class="nav-bar">
+     <div class="nav-section"><a class="nav-item active" data-section="employee-dashboard">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /> <rect x="14" y="3" width="7" height="7" rx="1" /> <rect x="14" y="14" width="7" height="7" rx="1" /> <rect x="3" y="14" width="7" height="7" rx="1" />
+       </svg> Meus RIDs </a> <a class="nav-item" data-section="employee-new">
+       <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="8" x2="12" y2="16" /> <line x1="8" y1="12" x2="16" y2="12" />
+       </svg> Novo RID </a>
+     </div>
+    </nav>
     <div class="content-area"><!-- Employee Dashboard Section -->
      <section id="section-employee-dashboard" class="content-section active">
       <div class="section-header">
-       <h2 id="employee-welcome" class="section-title">Bem-vindo à sua área de trabalho</h2>
+       <h2 id="employee-welcome" class="section-title">Bem-vindo �� sua área de trabalho</h2>
        <p class="section-subtitle">Visualize e acompanhe seus RIDs registrados</p>
       </div>
       <div class="card-grid">
@@ -1000,10 +1333,10 @@
          </svg>
         </div>
         <div class="stat-value">
-         5
+         0
         </div>
         <div class="stat-change">
-         Total registrados
+         Nenhum registrado
         </div>
        </div>
        <div class="stat-card">
@@ -1012,22 +1345,22 @@
          </svg>
         </div>
         <div class="stat-value">
-         2
+         0
         </div>
         <div class="stat-change">
-         Aguardando análise
+         Nenhum pendente
         </div>
        </div>
        <div class="stat-card">
-        <div class="stat-header"><span class="stat-label">Concluídos</span>
+        <div class="stat-header"><span class="stat-label">Corrigidos</span>
          <svg class="stat-icon" viewbox="0 0 24 24" fill="none" stroke="#e4a40d" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
          </svg>
         </div>
         <div class="stat-value">
-         3
+         0
         </div>
         <div class="stat-change">
-         Resolvidos
+         Nenhum corrigido
         </div>
        </div>
       </div>
@@ -1050,25 +1383,17 @@
          </thead>
          <tbody>
           <tr>
-           <td>#RID-001</td>
-           <td>Falha no processo de produção</td>
-           <td>Equipamento apresentou defeito durante operação</td>
-           <td>15/01/2025 14:30</td>
-           <td><span class="status-badge status-open">Aberto</span></td>
-          </tr>
-          <tr>
-           <td>#RID-005</td>
-           <td>Falha de comunicação</td>
-           <td>Informações não repassadas entre turnos</td>
-           <td>11/01/2025 18:00</td>
-           <td><span class="status-badge status-open">Aberto</span></td>
-          </tr>
-          <tr>
-           <td>#RID-008</td>
-           <td>Material inadequado</td>
-           <td>Matéria-prima recebida fora das especificações</td>
-           <td>08/01/2025 11:20</td>
-           <td><span class="status-badge status-closed">Concluído</span></td>
+           <td colspan="5">
+            <div class="empty-state">
+             <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <line x1="12" y1="8" x2="12" y2="12" /> <line x1="12" y1="16" x2="12.01" y2="16" />
+             </svg>
+             <div class="empty-state-title">
+              Nenhum RID registrado
+             </div>
+             <div class="empty-state-text">
+              Você ainda não registrou nenhum RID
+             </div>
+            </div></td>
           </tr>
          </tbody>
         </table>
@@ -1101,12 +1426,12 @@
     // FIREBASE CONFIGURATION
     // ========================================
     const firebaseConfig = {
-      apiKey: "AIzaSyB6yomhHyxKUVYCNjDVzK_ruFO8RYMZvL_k",
+      apiKey: "AIzaSyB6yomHyxKUVYCNjDVzK_ruFO8RYMZvl_k",
       authDomain: "sistema-rid-001.firebaseapp.com",
       projectId: "sistema-rid-001",
-      storageBucket: "sistema-rid-001.appspot.com",
+      storageBucket: "sistema-rid-001.firebasestorage.app",
       messagingSenderId: "875061628205",
-      appId: "1:875061628205:web:6bf2a5f9e0a9846d1157a4"
+      appId: "1:875061628205:web:6b2fa59e90a9846d1157a4"
     };
 
     // Initialize Firebase
@@ -1118,11 +1443,6 @@
     // FIREBASE FUNCTIONS - FIRESTORE OPERATIONS
     // ========================================
     
-    /**
-     * Salvar um novo RID no Firestore
-     * @param {Object} ridData - Dados do RID (assunto, descrição, departamento, etc)
-     * @returns {Promise<string>} - ID do documento criado
-     */
     async function saveRID(ridData) {
       try {
         const docRef = await db.collection('rids').add({
@@ -1138,10 +1458,6 @@
       }
     }
 
-    /**
-     * Buscar todos os RIDs do Firestore
-     * @returns {Promise<Array>} - Array com todos os RIDs
-     */
     async function getAllRIDs() {
       try {
         const snapshot = await db.collection('rids')
@@ -1161,11 +1477,6 @@
       }
     }
 
-    /**
-     * Buscar RIDs de um funcionário específico
-     * @param {string} userId - ID do usuário
-     * @returns {Promise<Array>} - Array com os RIDs do funcionário
-     */
     async function getRIDsByUser(userId) {
       try {
         const snapshot = await db.collection('rids')
@@ -1186,12 +1497,6 @@
       }
     }
 
-    /**
-     * Atualizar status de um RID
-     * @param {string} ridId - ID do RID
-     * @param {string} newStatus - Novo status (aberto, em_analise, concluido)
-     * @returns {Promise<void>}
-     */
     async function updateRIDStatus(ridId, newStatus) {
       try {
         await db.collection('rids').doc(ridId).update({
@@ -1205,11 +1510,6 @@
       }
     }
 
-    /**
-     * Deletar um RID
-     * @param {string} ridId - ID do RID a ser deletado
-     * @returns {Promise<void>}
-     */
     async function deleteRID(ridId) {
       try {
         await db.collection('rids').doc(ridId).delete();
@@ -1220,11 +1520,6 @@
       }
     }
 
-    /**
-     * Salvar dados de um funcionário
-     * @param {Object} employeeData - Dados do funcionário
-     * @returns {Promise<string>} - ID do documento criado
-     */
     async function saveEmployee(employeeData) {
       try {
         const docRef = await db.collection('employees').add({
@@ -1239,10 +1534,6 @@
       }
     }
 
-    /**
-     * Buscar todos os funcionários
-     * @returns {Promise<Array>} - Array com todos os funcionários
-     */
     async function getAllEmployees() {
       try {
         const snapshot = await db.collection('employees').get();
@@ -1260,11 +1551,6 @@
       }
     }
 
-    /**
-     * Escutar mudanças em tempo real nos RIDs
-     * @param {Function} callback - Função chamada quando há mudanças
-     * @returns {Function} - Função para cancelar a escuta
-     */
     function listenToRIDs(callback) {
       return db.collection('rids')
         .orderBy('createdAt', 'desc')
@@ -1277,6 +1563,165 @@
         }, error => {
           console.error('Erro ao escutar RIDs:', error);
         });
+    }
+
+    // ========================================
+    // RANKING SYSTEM - FIREBASE INTEGRATION
+    // ========================================
+    
+    const monthNames = {
+      "01": "Janeiro", "02": "Fevereiro", "03": "Março", "04": "Abril",
+      "05": "Maio", "06": "Junho", "07": "Julho", "08": "Agosto",
+      "09": "Setembro", "10": "Outubro", "11": "Novembro", "12": "Dezembro"
+    };
+    
+    /**
+     * Busca o ranking de funcionários por período (mês/ano)
+     * @param {string} month - Mês no formato "01" a "12"
+     * @param {string} year - Ano no formato "2025"
+     * @returns {Promise<Array>} - Array com top 3 funcionários
+     */
+    async function getRankingByPeriod(month, year) {
+      try {
+        // Criar data de início e fim do mês
+        const startDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+        const endDate = new Date(parseInt(year), parseInt(month), 0, 23, 59, 59);
+        
+        console.log('Buscando ranking para:', startDate, 'até', endDate);
+        
+        // Buscar RIDs do período
+        const snapshot = await db.collection('rids')
+          .where('createdAt', '>=', startDate)
+          .where('createdAt', '<=', endDate)
+          .get();
+        
+        // Contar RIDs por funcionário
+        const employeeCount = {};
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const userName = data.userName || 'Desconhecido';
+          const department = data.department || 'Não especificado';
+          
+          if (!employeeCount[userName]) {
+            employeeCount[userName] = {
+              name: userName,
+              department: department,
+              count: 0,
+              lastUpdate: data.createdAt
+            };
+          }
+          employeeCount[userName].count++;
+          
+          // Manter a data mais recente
+          if (data.createdAt > employeeCount[userName].lastUpdate) {
+            employeeCount[userName].lastUpdate = data.createdAt;
+          }
+        });
+        
+        // Converter para array e ordenar
+        const ranking = Object.values(employeeCount)
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 3); // Top 3
+        
+        console.log('Ranking calculado:', ranking);
+        return ranking;
+        
+      } catch (error) {
+        console.error('Erro ao buscar ranking:', error);
+        return [];
+      }
+    }
+    
+    /**
+     * Renderiza o ranking na tabela
+     * @param {Array} ranking - Array com dados do ranking
+     * @param {string} month - Mês
+     * @param {string} year - Ano
+     */
+    function renderRanking(ranking, month, year) {
+      const tbody = document.getElementById('ranking-tbody');
+      const periodSpan = document.getElementById('ranking-period');
+      
+      // Atualizar período
+      periodSpan.textContent = `${monthNames[month]} ${year}`;
+      
+      // Limpar tabela
+      tbody.innerHTML = '';
+      
+      // Se não houver dados
+      if (ranking.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div class="empty-state-title">Nenhum RID encontrado</div>
+                <div class="empty-state-text">Não há registros para ${monthNames[month]} ${year}</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Renderizar cada posição
+      ranking.forEach((employee, index) => {
+        const position = index + 1;
+        const isFirst = position === 1;
+        const isSecond = position === 2;
+        
+        const bgColor = isFirst ? '#fef9ed' : (isSecond ? '#f8f8f8' : 'transparent');
+        const iconColor = isFirst ? '#e4a40d' : '#8c8c8c';
+        const countColor = isFirst ? '#e4a40d' : '#2c2c2c';
+        
+        // Formatar data
+        let dateStr = 'N/A';
+        if (employee.lastUpdate && employee.lastUpdate.toDate) {
+          const date = employee.lastUpdate.toDate();
+          dateStr = date.toLocaleDateString('pt-BR');
+        }
+        
+        const row = document.createElement('tr');
+        row.style.background = bgColor;
+        row.innerHTML = `
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: ${iconColor};">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2">
+                ${position === 1 ? '<circle cx="12" cy="8" r="6"/><path d="M12 14l-3 8h6l-3-8z"/>' : 
+                  position === 2 ? '<circle cx="12" cy="8" r="5"/><path d="M12 13l-2.5 7h5l-2.5-7z"/>' :
+                  '<circle cx="12" cy="8" r="4"/><path d="M12 12l-2 6h4l-2-6z"/>'}
+              </svg>
+              ${position}º
+            </div>
+          </td>
+          <td style="font-weight: 600; color: #2c2c2c;">${employee.name}</td>
+          <td>${employee.department}</td>
+          <td style="font-weight: 700; font-size: 18px; color: ${countColor};">${employee.count}</td>
+          <td style="color: #8c8c8c;">${dateStr}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+    
+    /**
+     * Carrega o ranking do mês atual automaticamente
+     */
+    async function loadCurrentMonthRanking() {
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = String(now.getFullYear());
+      
+      // Atualizar campos do filtro
+      document.getElementById('filter-month').value = month;
+      document.getElementById('filter-year').value = year;
+      
+      // Carregar ranking
+      const ranking = await getRankingByPeriod(month, year);
+      renderRanking(ranking, month, year);
     }
 
     // ========================================
@@ -1387,7 +1832,7 @@
 
     let currentUser = null;
 
-    loginForm.addEventListener("submit", (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -1398,18 +1843,18 @@
         loginScreen.style.display = "none";
 
         if (user.role === "admin") {
-    adminDashboard.classList.add("active");
-    document.getElementById("user-name").textContent = user.name;
-
-    // 🔥 Ativar carregamento e escuta em tempo real dos RIDs
-    loadRIDsFromFirebase();
-    startListeningToRIDs();
-
-} else {
-    employeeDashboard.classList.add("active");
-    document.getElementById("employee-user-name").textContent = user.name;
-}
-
+          adminDashboard.classList.add("active");
+          document.getElementById("user-name").textContent = user.name;
+          
+          // Carregar ranking do mês atual
+          await loadCurrentMonthRanking();
+          
+          // Carregar todos os RIDs do Firebase
+          await loadAllRidsFromFirebase();
+        } else {
+          employeeDashboard.classList.add("active");
+          document.getElementById("employee-user-name").textContent = user.name;
+        }
       } else {
         const messageDiv = document.createElement("div");
         messageDiv.textContent = "Usuário ou senha incorretos";
@@ -1461,6 +1906,35 @@
 
     setupNavigation("admin-dashboard");
     setupNavigation("employee-dashboard");
+    
+    // Carregar RIDs quando navegar para a página de RIDs
+    function setupRidsPageLoad(dashboardId) {
+      const dashboard = document.getElementById(dashboardId);
+      const navItems = dashboard.querySelectorAll(".nav-item");
+      
+      navItems.forEach(item => {
+        item.addEventListener("click", (e) => {
+          const sectionId = item.getAttribute("data-section");
+          
+          // Se navegou para a página de RIDs, carregar dados
+          if (sectionId === "rids" && dashboardId === "admin-dashboard") {
+            loadAllRidsFromFirebase();
+          }
+        });
+      });
+    }
+    
+    setupRidsPageLoad("admin-dashboard");
+    
+    // Carregar RIDs automaticamente quando o admin fizer login
+    auth.onAuthStateChanged((user) => {
+      if (user && currentUser && currentUser.role === "admin") {
+        // Carregar RIDs assim que o dashboard admin estiver ativo
+        setTimeout(() => {
+          loadAllRidsFromFirebase();
+        }, 500);
+      }
+    });
 
     // New RID Form with Firebase Integration
     const newRidForm = document.getElementById("new-rid-form");
@@ -1468,14 +1942,12 @@
       newRidForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
-        // Desabilitar botão durante envio
         const submitBtn = newRidForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = "Salvando...";
         
         try {
-          // Coletar dados do formulário
           const ridData = {
             subject: document.getElementById("rid-subject").value,
             department: document.getElementById("rid-department").value,
@@ -1485,10 +1957,8 @@
             status: 'aberto'
           };
           
-          // Salvar no Firebase
           const ridId = await saveRID(ridData);
           
-          // Mostrar mensagem de sucesso
           const messageDiv = document.createElement("div");
           messageDiv.textContent = `✓ RID #${ridId.substring(0, 8)} registrado com sucesso no Firebase!`;
           messageDiv.style.cssText = "margin-top: 16px; padding: 16px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;";
@@ -1502,7 +1972,6 @@
           setTimeout(() => messageDiv.remove(), 4000);
           
         } catch (error) {
-          // Mostrar mensagem de erro
           const errorDiv = document.createElement("div");
           errorDiv.textContent = "✗ Erro ao salvar RID. Tente novamente.";
           errorDiv.style.cssText = "margin-top: 16px; padding: 16px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; font-size: 14px; text-align: center;";
@@ -1514,7 +1983,6 @@
           
           setTimeout(() => errorDiv.remove(), 4000);
         } finally {
-          // Reabilitar botão
           submitBtn.disabled = false;
           submitBtn.textContent = originalText;
         }
@@ -1522,52 +1990,557 @@
     }
     
     // ========================================
-// ATUALIZA TABELA DE RIDS DO ADMIN
-// ========================================
-function updateAdminRIDsTable(rids) {
-  const tableBody = document.querySelector('#section-rids table tbody');
-  if (!tableBody) return;
-
-  tableBody.innerHTML = ""; // limpar tabela
-
-  rids.forEach(rid => {
-    const date = rid.createdAt?.toDate 
-      ? rid.createdAt.toDate().toLocaleString()
-      : "—";
-
-    const row = `
-      <tr>
-        <td>${rid.id.substring(0, 8).toUpperCase()}</td>
-        <td>${rid.subject || "—"}</td>
-        <td>${rid.description || "—"}</td>
-        <td>${rid.userName || "—"}</td>
-        <td>${date}</td>
-        <td><span class="status-badge status-open">${rid.status || "aberto"}</span></td>
-      </tr>
-    `;
-    tableBody.innerHTML += row;
-  });
-}
-
+    // RECENT RIDS FILTER FUNCTIONALITY
+    // ========================================
+    const btnFilterRecent = document.getElementById("btn-filter-recent");
+    const recentFilterPanel = document.getElementById("recent-filter-panel");
+    const btnApplyRecentFilter = document.getElementById("btn-apply-recent-filter");
+    const btnClearRecentFilter = document.getElementById("btn-clear-recent-filter");
+    const filterRecentStart = document.getElementById("filter-recent-start");
+    const filterRecentEnd = document.getElementById("filter-recent-end");
+    const filterRecentStatus = document.getElementById("filter-recent-status");
+    const recentRidsTbody = document.getElementById("recent-rids-tbody");
+    
+    // Sample data for demonstration
+    const sampleRecentRids = [];
+    
+    function getStatusBadgeClass(status) {
+      switch(status) {
+        case "aberto": return "status-open";
+        case "em_analise": return "status-progress";
+        case "concluido": return "status-closed";
+        default: return "status-open";
+      }
+    }
+    
+    function getStatusLabel(status) {
+      switch(status) {
+        case "aberto": return "Aberto";
+        case "em_analise": return "Em análise";
+        case "concluido": return "Concluído";
+        default: return "Aberto";
+      }
+    }
+    
+    function renderRecentRids(rids) {
+      recentRidsTbody.innerHTML = "";
+      
+      if (rids.length === 0) {
+        recentRidsTbody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div class="empty-state-title">Nenhum RID encontrado</div>
+                <div class="empty-state-text">Tente ajustar os filtros</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      rids.forEach(rid => {
+        const row = document.createElement("tr");
+        const dateStr = rid.date.toLocaleDateString('pt-BR');
+        row.innerHTML = `
+          <td>#${rid.id}</td>
+          <td>${rid.subject}</td>
+          <td>${rid.employee}</td>
+          <td>${dateStr}</td>
+          <td><span class="status-badge ${getStatusBadgeClass(rid.status)}">${getStatusLabel(rid.status)}</span></td>
+        `;
+        recentRidsTbody.appendChild(row);
+      });
+    }
+    
+    function filterRecentRids() {
+      const startDate = filterRecentStart.value ? new Date(filterRecentStart.value) : null;
+      const endDate = filterRecentEnd.value ? new Date(filterRecentEnd.value) : null;
+      const status = filterRecentStatus.value;
+      
+      let filtered = [...sampleRecentRids];
+      
+      if (startDate) {
+        filtered = filtered.filter(rid => rid.date >= startDate);
+      }
+      
+      if (endDate) {
+        const endOfDay = new Date(endDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        filtered = filtered.filter(rid => rid.date <= endOfDay);
+      }
+      
+      if (status) {
+        filtered = filtered.filter(rid => rid.status === status);
+      }
+      
+      return filtered;
+    }
+    
+    // Toggle filter panel
+    if (btnFilterRecent) {
+      btnFilterRecent.addEventListener("click", () => {
+        const isVisible = recentFilterPanel.style.display !== "none";
+        recentFilterPanel.style.display = isVisible ? "none" : "block";
+        btnFilterRecent.textContent = isVisible ? "Filtrar" : "Fechar";
+      });
+    }
+    
+    // Apply filter
+    if (btnApplyRecentFilter) {
+      btnApplyRecentFilter.addEventListener("click", () => {
+        const filtered = filterRecentRids();
+        renderRecentRids(filtered);
+        
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = `✓ ${filtered.length} RID(s) encontrado(s)`;
+        messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 2000);
+      });
+    }
+    
+    // Clear filter
+    if (btnClearRecentFilter) {
+      btnClearRecentFilter.addEventListener("click", () => {
+        filterRecentStart.value = "";
+        filterRecentEnd.value = "";
+        filterRecentStatus.value = "";
+        renderRecentRids(sampleRecentRids);
+        
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = "✓ Filtros limpos";
+        messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 2000);
+      });
+    }
+    
+    // Initialize with all RIDs
+    renderRecentRids(sampleRecentRids);
     
     // ========================================
-// ESCUTA EM TEMPO REAL
-// ========================================
-let unsubscribe = null;
-
-function startListeningToRIDs() {
-  unsubscribe = listenToRIDs((rids) => {
-    console.log('RIDs atualizados em tempo real:', rids);
-    updateAdminRIDsTable(rids);
-  });
-}
-
-function stopListeningToRIDs() {
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
-  }
-}
+    // MODAL NOVO RID FUNCTIONALITY
+    // ========================================
+    const modalNovoRid = document.getElementById("modal-novo-rid");
+    const btnNovoRidAdmin = document.getElementById("btn-novo-rid-admin");
+    const closeModalRid = document.getElementById("close-modal-rid");
+    const cancelModalRid = document.getElementById("cancel-modal-rid");
+    const formNovoRid = document.getElementById("form-novo-rid");
+    
+    // Abrir modal
+    if (btnNovoRidAdmin) {
+      btnNovoRidAdmin.addEventListener("click", () => {
+        modalNovoRid.classList.add("active");
+        document.body.style.overflow = "hidden";
+      });
+    }
+    
+    // Fechar modal
+    function fecharModal() {
+      modalNovoRid.classList.remove("active");
+      document.body.style.overflow = "auto";
+      formNovoRid.reset();
+    }
+    
+    if (closeModalRid) {
+      closeModalRid.addEventListener("click", fecharModal);
+    }
+    
+    if (cancelModalRid) {
+      cancelModalRid.addEventListener("click", fecharModal);
+    }
+    
+    // Fechar ao clicar fora do modal
+    modalNovoRid.addEventListener("click", (e) => {
+      if (e.target === modalNovoRid) {
+        fecharModal();
+      }
+    });
+    
+    // Submeter formulário
+    if (formNovoRid) {
+      formNovoRid.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = formNovoRid.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Salvando...";
+        
+        try {
+          const formData = new FormData(formNovoRid);
+          const ridData = {
+            emitente: formData.get("emitente"),
+            tipoContrato: formData.get("tipo_contrato"),
+            unidade: formData.get("unidade"),
+            setor: formData.get("setor"),
+            dataOcorrencia: formData.get("data_ocorrencia"),
+            incidente: formData.get("incidente"),
+            origem: formData.get("origem"),
+            local: formData.get("local"),
+            descricao: formData.get("descricao"),
+            classificacaoRisco: formData.get("risco"),
+            acaoImediata: formData.get("acao_imediata"),
+            status: formData.get("status"),
+            userId: currentUser ? currentUser.username : 'unknown',
+            userName: currentUser ? currentUser.name : 'Desconhecido',
+            department: formData.get("setor") // Para compatibilidade com ranking
+          };
+          
+          // Salvar no Firebase
+          const ridId = await saveRID(ridData);
+          
+          // Adicionar ao array local para atualização imediata da UI
+          const newRid = {
+            id: ridId,
+            ...ridData,
+            createdAt: { toDate: () => new Date() }
+          };
+          allRidsData.unshift(newRid);
+          
+          // Atualizar tabela de RIDs imediatamente
+          renderAllRids(allRidsData);
+          
+          // Recarregar ranking se estiver no mês atual
+          const now = new Date();
+          const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+          const currentYear = String(now.getFullYear());
+          const filterMonthValue = document.getElementById('filter-month').value;
+          const filterYearValue = document.getElementById('filter-year').value;
+          
+          if (filterMonthValue === currentMonth && filterYearValue === currentYear) {
+            await loadCurrentMonthRanking();
+          }
+          
+          // Mostrar mensagem de sucesso
+          const messageDiv = document.createElement("div");
+          messageDiv.textContent = `✓ RID #${ridId.substring(0, 8).toUpperCase()} salvo com sucesso no Firebase!`;
+          messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+          document.body.appendChild(messageDiv);
+          setTimeout(() => messageDiv.remove(), 4000);
+          
+          // Fechar modal
+          fecharModal();
+          
+        } catch (error) {
+          console.error("Erro ao salvar RID:", error);
+          
+          const errorDiv = document.createElement("div");
+          errorDiv.textContent = "✗ Erro ao salvar RID no Firebase. Tente novamente.";
+          errorDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+          document.body.appendChild(errorDiv);
+          setTimeout(() => errorDiv.remove(), 4000);
+          
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+    }
+    
+    // ========================================
+    // ALL RIDS PAGE - LOAD AND FILTER
+    // ========================================
+    const allRidsTbody = document.getElementById("all-rids-tbody");
+    const btnFilterAllRids = document.getElementById("btn-filter-all-rids");
+    const allRidsFilterPanel = document.getElementById("all-rids-filter-panel");
+    const btnApplyAllRidsFilter = document.getElementById("btn-apply-all-rids-filter");
+    const btnClearAllRidsFilter = document.getElementById("btn-clear-all-rids-filter");
+    const filterAllRidsStart = document.getElementById("filter-all-rids-start");
+    const filterAllRidsEnd = document.getElementById("filter-all-rids-end");
+    const filterAllRidsStatus = document.getElementById("filter-all-rids-status");
+    
+    let allRidsData = []; // Armazena todos os RIDs do Firebase
+    
+    function getRiskBadgeColor(risco) {
+      switch(risco) {
+        case "baixo": return "background: #e8f5e9; color: #4caf50;";
+        case "medio": return "background: #fff3e0; color: #ff9800;";
+        case "alto": return "background: #ffe0b2; color: #f57c00;";
+        case "critico": return "background: #ffebee; color: #f44336;";
+        default: return "background: #f5f5f5; color: #8c8c8c;";
+      }
+    }
+    
+    function getRiskLabel(risco) {
+      switch(risco) {
+        case "baixo": return "Baixo";
+        case "medio": return "Médio";
+        case "alto": return "Alto";
+        case "critico": return "Crítico";
+        default: return risco || "N/A";
+      }
+    }
+    
+    function getStatusBadgeForRid(status) {
+      switch(status) {
+        case "corrigido": return "status-closed";
+        case "vencido": return "status-open";
+        default: return "status-open";
+      }
+    }
+    
+    function getStatusLabelForRid(status) {
+      switch(status) {
+        case "corrigido": return "Corrigido";
+        case "vencido": return "Vencido";
+        default: return status || "N/A";
+      }
+    }
+    
+    function renderAllRids(rids) {
+      allRidsTbody.innerHTML = "";
+      
+      if (rids.length === 0) {
+        allRidsTbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div class="empty-state-title">Nenhum RID encontrado</div>
+                <div class="empty-state-text">Não há RIDs registrados ou tente ajustar os filtros</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      rids.forEach(rid => {
+        const row = document.createElement("tr");
+        
+        // Formatar data
+        let dateStr = "N/A";
+        if (rid.dataOcorrencia) {
+          dateStr = rid.dataOcorrencia;
+        } else if (rid.createdAt && rid.createdAt.toDate) {
+          const date = rid.createdAt.toDate();
+          dateStr = date.toLocaleDateString('pt-BR');
+        }
+        
+        // Truncar descrição se muito longa
+        const descricao = rid.descricao || "N/A";
+        const descricaoTruncada = descricao.length > 50 ? descricao.substring(0, 50) + "..." : descricao;
+        
+        const ridId = rid.id ? rid.id.substring(0, 8).toUpperCase() : "N/A";
+        
+        row.innerHTML = `
+          <td style="font-weight: 600; color: #e4a40d;">#${ridId}</td>
+          <td>${rid.emitente || "N/A"}</td>
+          <td>${rid.setor || "N/A"}</td>
+          <td>${rid.local || "N/A"}</td>
+          <td title="${descricao}">${descricaoTruncada}</td>
+          <td><span class="status-badge" style="${getRiskBadgeColor(rid.classificacaoRisco)}">${getRiskLabel(rid.classificacaoRisco)}</span></td>
+          <td>${dateStr}</td>
+          <td><span class="status-badge ${getStatusBadgeForRid(rid.status)}">${getStatusLabelForRid(rid.status)}</span></td>
+        `;
+        allRidsTbody.appendChild(row);
+      });
+    }
+    
+    async function loadAllRidsFromFirebase() {
+      try {
+        allRidsTbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div class="empty-state-title">Carregando RIDs...</div>
+                <div class="empty-state-text">Aguarde enquanto buscamos os dados do Firebase</div>
+              </div>
+            </td>
+          </tr>
+        `;
+        
+        const rids = await getAllRIDs();
+        allRidsData = rids;
+        renderAllRids(rids);
+        
+      } catch (error) {
+        console.error("Erro ao carregar RIDs:", error);
+        allRidsTbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div class="empty-state-title">Erro ao carregar RIDs</div>
+                <div class="empty-state-text">Tente novamente mais tarde</div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    function filterAllRidsData() {
+      const startDate = filterAllRidsStart.value ? new Date(filterAllRidsStart.value) : null;
+      const endDate = filterAllRidsEnd.value ? new Date(filterAllRidsEnd.value) : null;
+      const status = filterAllRidsStatus.value;
+      
+      let filtered = [...allRidsData];
+      
+      // Filtrar por data
+      if (startDate || endDate) {
+        filtered = filtered.filter(rid => {
+          let ridDate = null;
+          
+          // Tentar pegar data da ocorrência (formato dd/MM/yyyy)
+          if (rid.dataOcorrencia) {
+            const parts = rid.dataOcorrencia.split(/[-\/]/);
+            if (parts.length === 3) {
+              // Assumir formato yyyy-MM-dd ou dd/MM/yyyy
+              if (parts[0].length === 4) {
+                ridDate = new Date(parts[0], parts[1] - 1, parts[2]);
+              } else {
+                ridDate = new Date(parts[2], parts[1] - 1, parts[0]);
+              }
+            }
+          }
+          
+          // Se não tiver data de ocorrência, usar createdAt
+          if (!ridDate && rid.createdAt && rid.createdAt.toDate) {
+            ridDate = rid.createdAt.toDate();
+          }
+          
+          if (!ridDate) return false;
+          
+          if (startDate && ridDate < startDate) return false;
+          if (endDate) {
+            const endOfDay = new Date(endDate);
+            endOfDay.setHours(23, 59, 59, 999);
+            if (ridDate > endOfDay) return false;
+          }
+          
+          return true;
+        });
+      }
+      
+      // Filtrar por status
+      if (status) {
+        filtered = filtered.filter(rid => rid.status === status);
+      }
+      
+      return filtered;
+    }
+    
+    // Toggle filter panel
+    if (btnFilterAllRids) {
+      btnFilterAllRids.addEventListener("click", () => {
+        const isVisible = allRidsFilterPanel.style.display !== "none";
+        allRidsFilterPanel.style.display = isVisible ? "none" : "block";
+        btnFilterAllRids.textContent = isVisible ? "Filtrar" : "Fechar";
+      });
+    }
+    
+    // Apply filter
+    if (btnApplyAllRidsFilter) {
+      btnApplyAllRidsFilter.addEventListener("click", () => {
+        const filtered = filterAllRidsData();
+        renderAllRids(filtered);
+        
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = `✓ ${filtered.length} RID(s) encontrado(s)`;
+        messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 2000);
+      });
+    }
+    
+    // Clear filter
+    if (btnClearAllRidsFilter) {
+      btnClearAllRidsFilter.addEventListener("click", () => {
+        filterAllRidsStart.value = "";
+        filterAllRidsEnd.value = "";
+        filterAllRidsStatus.value = "";
+        renderAllRids(allRidsData);
+        
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = "✓ Filtros limpos";
+        messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 2000);
+      });
+    }
+    
+    // ========================================
+    // RANKING FILTER FUNCTIONALITY
+    // ========================================
+    const btnFilterRanking = document.getElementById("btn-filter-ranking");
+    const rankingFilterPanel = document.getElementById("ranking-filter-panel");
+    const btnApplyFilter = document.getElementById("btn-apply-filter");
+    const filterMonth = document.getElementById("filter-month");
+    const filterYear = document.getElementById("filter-year");
+    
+    // Toggle filter panel
+    if (btnFilterRanking) {
+      btnFilterRanking.addEventListener("click", () => {
+        const isVisible = rankingFilterPanel.style.display !== "none";
+        rankingFilterPanel.style.display = isVisible ? "none" : "block";
+        btnFilterRanking.textContent = isVisible ? "Filtrar" : "Fechar";
+      });
+    }
+    
+    // Apply filter
+    if (btnApplyFilter) {
+      btnApplyFilter.addEventListener("click", async () => {
+        const month = filterMonth.value;
+        const year = filterYear.value;
+        const monthName = monthNames[month];
+        
+        // Desabilitar botão durante carregamento
+        btnApplyFilter.disabled = true;
+        btnApplyFilter.textContent = "Carregando...";
+        
+        try {
+          // Buscar ranking do Firebase
+          const ranking = await getRankingByPeriod(month, year);
+          
+          // Renderizar ranking
+          renderRanking(ranking, month, year);
+          
+          // Fechar painel de filtro
+          rankingFilterPanel.style.display = "none";
+          btnFilterRanking.textContent = "Filtrar";
+          
+          // Mostrar mensagem de sucesso
+          const messageDiv = document.createElement("div");
+          messageDiv.textContent = `✓ Ranking atualizado para ${monthName} ${year}`;
+          messageDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+          document.body.appendChild(messageDiv);
+          setTimeout(() => messageDiv.remove(), 3000);
+          
+        } catch (error) {
+          console.error('Erro ao aplicar filtro:', error);
+          
+          const errorDiv = document.createElement("div");
+          errorDiv.textContent = "✗ Erro ao carregar ranking. Tente novamente.";
+          errorDiv.style.cssText = "position: fixed; top: 20px; right: 20px; padding: 16px 24px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;";
+          document.body.appendChild(errorDiv);
+          setTimeout(() => errorDiv.remove(), 3000);
+          
+        } finally {
+          btnApplyFilter.disabled = false;
+          btnApplyFilter.textContent = "Aplicar";
+        }
+      });
+    }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a43e50863ed261c',t:'MTc2NDEwMjUyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a44911e906cad78',t:'MTc2NDEwOTU3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
