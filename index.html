@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Gestão de RIDs</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script><!-- Firebase SDK -->
+  <script src="/_sdk/element_sdk.js"></script><!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     
     // Firebase Configuration
     const firebaseConfig = {
@@ -35,17 +34,16 @@
       doc,
       query,
       where,
-      orderBy
+      orderBy,
+      onSnapshot
     };
     
     // ============================================
-    // FUNÇ��ES FIREBASE - SALVAR E BUSCAR DADOS
+    // FUNÇÕES FIREBASE - SALVAR E BUSCAR DADOS
     // ============================================
     
     /**
      * Salvar um novo RID no Firestore
-     * @param {Object} ridData - Dados do RID { nome_funcionario, titulo, descricao, status }
-     * @returns {Promise<string>} - ID do documento criado
      */
     window.salvarRIDFirebase = async (ridData) => {
       try {
@@ -54,17 +52,33 @@
           data_criacao: new Date().toISOString(),
           ultimo_update: new Date().toISOString()
         });
-        console.log('RID salvo no Firebase com ID:', docRef.id);
+        console.log('✅ RID salvo no Firebase com ID:', docRef.id);
         return docRef.id;
       } catch (error) {
-        console.error('Erro ao salvar RID no Firebase:', error);
+        console.error('❌ Erro ao salvar RID no Firebase:', error);
+        throw error;
+      }
+    };
+    
+    /**
+     * Salvar funcionário no Firestore
+     */
+    window.salvarFuncionarioFirebase = async (funcData) => {
+      try {
+        const docRef = await addDoc(collection(db, 'funcionarios'), {
+          ...funcData,
+          data_criacao: new Date().toISOString()
+        });
+        console.log('✅ Funcionário salvo no Firebase com ID:', docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error('❌ Erro ao salvar funcionário no Firebase:', error);
         throw error;
       }
     };
     
     /**
      * Buscar todos os RIDs do Firestore
-     * @returns {Promise<Array>} - Array de RIDs
      */
     window.buscarRIDsFirebase = async () => {
       try {
@@ -72,51 +86,41 @@
         const rids = [];
         querySnapshot.forEach((doc) => {
           rids.push({
-            id: doc.id,
+            firebaseId: doc.id,
             ...doc.data()
           });
         });
-        console.log('RIDs buscados do Firebase:', rids.length);
+        console.log('📥 RIDs buscados do Firebase:', rids.length);
         return rids;
       } catch (error) {
-        console.error('Erro ao buscar RIDs do Firebase:', error);
+        console.error('❌ Erro ao buscar RIDs do Firebase:', error);
         throw error;
       }
     };
     
     /**
-     * Buscar RIDs por funcionário
-     * @param {string} nomeFuncionario - Nome do funcionário
-     * @returns {Promise<Array>} - Array de RIDs do funcionário
+     * Buscar todos os funcionários do Firestore
      */
-    window.buscarRIDsPorFuncionarioFirebase = async (nomeFuncionario) => {
+    window.buscarFuncionariosFirebase = async () => {
       try {
-        const q = query(
-          collection(db, 'rids'),
-          where('nome_funcionario', '==', nomeFuncionario),
-          orderBy('data_criacao', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const rids = [];
+        const querySnapshot = await getDocs(collection(db, 'funcionarios'));
+        const funcionarios = [];
         querySnapshot.forEach((doc) => {
-          rids.push({
-            id: doc.id,
+          funcionarios.push({
+            firebaseId: doc.id,
             ...doc.data()
           });
         });
-        console.log('RIDs do funcionário buscados:', rids.length);
-        return rids;
+        console.log('📥 Funcionários buscados do Firebase:', funcionarios.length);
+        return funcionarios;
       } catch (error) {
-        console.error('Erro ao buscar RIDs por funcionário:', error);
+        console.error('❌ Erro ao buscar funcionários do Firebase:', error);
         throw error;
       }
     };
     
     /**
      * Atualizar um RID existente
-     * @param {string} ridId - ID do documento
-     * @param {Object} updates - Dados a atualizar
-     * @returns {Promise<void>}
      */
     window.atualizarRIDFirebase = async (ridId, updates) => {
       try {
@@ -125,94 +129,75 @@
           ...updates,
           ultimo_update: new Date().toISOString()
         });
-        console.log('RID atualizado no Firebase:', ridId);
+        console.log('✅ RID atualizado no Firebase:', ridId);
       } catch (error) {
-        console.error('Erro ao atualizar RID no Firebase:', error);
+        console.error('❌ Erro ao atualizar RID no Firebase:', error);
         throw error;
       }
     };
     
     /**
      * Deletar um RID
-     * @param {string} ridId - ID do documento
-     * @returns {Promise<void>}
      */
     window.deletarRIDFirebase = async (ridId) => {
       try {
         await deleteDoc(doc(db, 'rids', ridId));
-        console.log('RID deletado do Firebase:', ridId);
+        console.log('✅ RID deletado do Firebase:', ridId);
       } catch (error) {
-        console.error('Erro ao deletar RID do Firebase:', error);
+        console.error('❌ Erro ao deletar RID do Firebase:', error);
         throw error;
       }
     };
     
     /**
-     * Buscar RIDs por status
-     * @param {string} status - Status do RID ('Aberto', 'Em análise', 'Fechado')
-     * @returns {Promise<Array>} - Array de RIDs com o status especificado
+     * Deletar um funcionário
      */
-    window.buscarRIDsPorStatusFirebase = async (status) => {
+    window.deletarFuncionarioFirebase = async (funcId) => {
       try {
-        const q = query(
-          collection(db, 'rids'),
-          where('status', '==', status),
-          orderBy('data_criacao', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const rids = [];
-        querySnapshot.forEach((doc) => {
-          rids.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-        console.log(`RIDs com status '${status}' buscados:`, rids.length);
-        return rids;
+        await deleteDoc(doc(db, 'funcionarios', funcId));
+        console.log('✅ Funcionário deletado do Firebase:', funcId);
       } catch (error) {
-        console.error('Erro ao buscar RIDs por status:', error);
+        console.error('❌ Erro ao deletar funcionário do Firebase:', error);
         throw error;
       }
     };
     
-    // ============================================
-    // EXEMPLO DE USO DAS FUNÇÕES
-    // ============================================
-    
-    /*
-    // Exemplo 1: Salvar um novo RID
-    const novoRID = {
-      nome_funcionario: 'João Silva',
-      titulo: 'Problema na máquina X',
-      descricao: 'A máquina apresentou falha no sistema de refrigeração',
-      status: 'Aberto'
+    /**
+     * Listener em tempo real para RIDs
+     */
+    window.escutarRIDsFirebase = (callback) => {
+      const q = query(collection(db, 'rids'), orderBy('data_criacao', 'desc'));
+      return onSnapshot(q, (snapshot) => {
+        const rids = [];
+        snapshot.forEach((doc) => {
+          rids.push({
+            firebaseId: doc.id,
+            ...doc.data()
+          });
+        });
+        callback(rids);
+      });
     };
-    const ridId = await window.salvarRIDFirebase(novoRID);
     
-    // Exemplo 2: Buscar todos os RIDs
-    const todosRIDs = await window.buscarRIDsFirebase();
+    /**
+     * Listener em tempo real para funcionários
+     */
+    window.escutarFuncionariosFirebase = (callback) => {
+      const q = query(collection(db, 'funcionarios'), orderBy('data_criacao', 'desc'));
+      return onSnapshot(q, (snapshot) => {
+        const funcionarios = [];
+        snapshot.forEach((doc) => {
+          funcionarios.push({
+            firebaseId: doc.id,
+            ...doc.data()
+          });
+        });
+        callback(funcionarios);
+      });
+    };
     
-    // Exemplo 3: Buscar RIDs de um funcionário específico
-    const ridsJoao = await window.buscarRIDsPorFuncionarioFirebase('João Silva');
-    
-    // Exemplo 4: Atualizar status de um RID
-    await window.atualizarRIDFirebase(ridId, { status: 'Em análise' });
-    
-    // Exemplo 5: Deletar um RID
-    await window.deletarRIDFirebase(ridId);
-    
-    // Exemplo 6: Buscar RIDs por status
-    const ridsAbertos = await window.buscarRIDsPorStatusFirebase('Aberto');
-    */
-    
-    console.log('Firebase inicializado com sucesso!');
-    console.log('Funções disponíveis:');
-    console.log('- window.salvarRIDFirebase(ridData)');
-    console.log('- window.buscarRIDsFirebase()');
-    console.log('- window.buscarRIDsPorFuncionarioFirebase(nomeFuncionario)');
-    console.log('- window.atualizarRIDFirebase(ridId, updates)');
-    console.log('- window.deletarRIDFirebase(ridId)');
-    console.log('- window.buscarRIDsPorStatusFirebase(status)');
+    console.log('🔥 Firebase inicializado com sucesso!');
+    console.log('📡 Sincronização em tempo real ativada!');
   </script>
   <style>
     body {
@@ -282,13 +267,14 @@
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
   <div id="app-root"></div>
   <script>
     // ============================================
-    // CONFIGURAÇÃO EDIT����VEL
+    // CONFIGURAÇÃO EDITÁVEL
     // ============================================
     const defaultConfig = {
       background_color: "#F5F5F5",
@@ -310,10 +296,12 @@
     // ESTADO GLOBAL
     // ============================================
     let currentData = [];
-    let currentRecordCount = 0;
-    let currentUser = null; // { tipo: 'admin' | 'funcionario', nome: string }
-    let currentAdminSection = 'dashboard'; // dashboard | rids | funcionarios | relatorio
+    let currentFuncionarios = [];
+    let currentUser = null;
+    let currentAdminSection = 'dashboard';
     let isSaving = false;
+    let ridsListener = null;
+    let funcionariosListener = null;
     
     // ============================================
     // HELPERS
@@ -362,7 +350,7 @@
     }
     
     // ============================================
-    // ÍCONES SVG (sem preenchimento)
+    // ÍCONES SVG
     // ============================================
     const icons = {
       user: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -378,6 +366,52 @@
       check: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
       x: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
     };
+    
+    // ============================================
+    // SINCRONIZAÇÃO FIREBASE EM TEMPO REAL
+    // ============================================
+    function iniciarSincronizacaoFirebase() {
+      if (!window.escutarRIDsFirebase || !window.escutarFuncionariosFirebase) {
+        console.log('⏳ Aguardando Firebase...');
+        setTimeout(iniciarSincronizacaoFirebase, 500);
+        return;
+      }
+      
+      console.log('🔥 Iniciando sincronização em tempo real...');
+      
+      // Listener para RIDs
+      ridsListener = window.escutarRIDsFirebase((rids) => {
+        console.log('📡 RIDs atualizados:', rids.length);
+        currentData = rids;
+        
+        // Atualizar interface
+        if (currentUser) {
+          if (currentUser.tipo === 'admin') {
+            if (currentAdminSection === 'dashboard') {
+              const dashContent = $('admin-content');
+              if (dashContent) renderDashboard(dashContent);
+            } else if (currentAdminSection === 'rids') {
+              renderRidsList();
+            }
+          } else {
+            renderFuncRidsList();
+          }
+        }
+      });
+      
+      // Listener para funcionários
+      funcionariosListener = window.escutarFuncionariosFirebase((funcionarios) => {
+        console.log('📡 Funcionários atualizados:', funcionarios.length);
+        currentFuncionarios = funcionarios;
+        
+        // Atualizar interface
+        if (currentUser && currentUser.tipo === 'admin' && currentAdminSection === 'funcionarios') {
+          renderFuncionariosList();
+        }
+      });
+      
+      showMessage('Sincronização em tempo real ativada!', 'success');
+    }
     
     // ============================================
     // RENDER PRINCIPAL
@@ -417,8 +451,6 @@
                 <h1 id="login-title" style="margin: 0 0 8px 0; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};"></h1>
                 <p id="login-subtitle" style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};"></p>
               </div>
-              
-
               
               <!-- Formulário de Login -->
               <form id="login-form" style="display: ${!showCadastro ? 'flex' : 'none'}; flex-direction: column; gap: 20px;">
@@ -541,6 +573,16 @@
                 >
                   <span id="btn-cadastro-text">Criar Conta</span>
                 </button>
+                
+                <button 
+                  id="btn-voltar-login" 
+                  type="button"
+                  style="width: 100%; padding: 14px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: transparent; color: ${config.text_color || defaultConfig.text_color}; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                  onmouseover="this.style.background='${config.background_color || defaultConfig.background_color}'"
+                  onmouseout="this.style.background='transparent'"
+                >
+                  Voltar ao Login
+                </button>
               </form>
               
               <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; text-align: center;">
@@ -560,7 +602,7 @@
     }
     
     function attachLoginListeners() {
-      // Bot��o Ir para Cadastro
+      // Botão Ir para Cadastro
       const btnIrCadastro = $('btn-ir-cadastro');
       if (btnIrCadastro) {
         btnIrCadastro.addEventListener('click', () => {
@@ -569,10 +611,19 @@
         });
       }
       
+      // Botão Voltar ao Login
+      const btnVoltarLogin = $('btn-voltar-login');
+      if (btnVoltarLogin) {
+        btnVoltarLogin.addEventListener('click', () => {
+          showCadastro = false;
+          renderLogin();
+        });
+      }
+      
       // Formulário de Login
       const loginForm = $('login-form');
       if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           
           const usuario = $('login-usuario').value.trim();
@@ -594,8 +645,7 @@
           } else {
             // Verificar se o usuário está cadastrado (usando CPF como usuário)
             const cpfLimpo = usuario.replace(/\D/g, '');
-            const usuarioCadastrado = currentData.find(u => 
-              u.tipo_usuario === 'usuario_cadastrado' && 
+            const usuarioCadastrado = currentFuncionarios.find(u => 
               u.cpf === cpfLimpo && 
               u.senha === senha
             );
@@ -636,13 +686,8 @@
         cadastroForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           
-          if (!window.dataSdk) {
+          if (!window.salvarFuncionarioFirebase) {
             showMessage('Sistema de dados não disponível', 'error');
-            return;
-          }
-          
-          if (currentRecordCount >= 999) {
-            showMessage('Limite máximo de cadastros atingido', 'error');
             return;
           }
           
@@ -672,10 +717,7 @@
           }
           
           // Verificar se o CPF já existe
-          const cpfExiste = currentData.find(u => 
-            u.tipo_usuario === 'usuario_cadastrado' && 
-            u.cpf === cpf
-          );
+          const cpfExiste = currentFuncionarios.find(u => u.cpf === cpf);
           
           if (cpfExiste) {
             showMessage('Este CPF já está cadastrado', 'error');
@@ -689,29 +731,23 @@
             btnText.innerHTML = '<div class="spinner"></div>';
           }
           
-          const now = new Date().toISOString();
-          const record = {
-            tipo_usuario: 'usuario_cadastrado',
-            nome_completo: nomeCompleto,
-            cpf: cpf,
-            senha: senha,
-            data_criacao: now,
-            ultimo_update: now
-          };
-          
-          const result = await window.dataSdk.create(record);
-          
-          if (btnCadastro && btnText) {
-            btnCadastro.disabled = false;
-            btnText.textContent = 'Criar Conta';
-          }
-          
-          if (result.isOk) {
+          try {
+            await window.salvarFuncionarioFirebase({
+              nome_completo: nomeCompleto,
+              cpf: cpf,
+              senha: senha
+            });
+            
             showMessage('Conta criada com sucesso! Faça login para continuar.', 'success');
             showCadastro = false;
             renderLogin();
-          } else {
+          } catch (error) {
             showMessage('Erro ao criar conta', 'error');
+          } finally {
+            if (btnCadastro && btnText) {
+              btnCadastro.disabled = false;
+              btnText.textContent = 'Criar Conta';
+            }
           }
         });
       }
@@ -833,20 +869,15 @@
     function renderDashboard(content) {
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas RIDs (excluir usuários cadastrados)
-      const ridsData = currentData.filter(r => r.tipo_usuario === 'funcionario');
-      
-      const total = ridsData.length;
-      const abertos = ridsData.filter(r => r.status === 'Em aberto').length;
-      const emAnalise = ridsData.filter(r => r.status === 'Vencidos').length;
-      const fechados = ridsData.filter(r => r.status === 'Corrigidos').length;
-      
-      const funcionarios = Array.from(new Set(ridsData.map(r => r.nome_funcionario).filter(Boolean)));
+      const total = currentData.length;
+      const abertos = currentData.filter(r => r.status === 'Em aberto').length;
+      const emAnalise = currentData.filter(r => r.status === 'Vencidos').length;
+      const fechados = currentData.filter(r => r.status === 'Corrigidos').length;
       
       content.innerHTML = `
         <div class="fade-in">
           <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Dashboard</h1>
-          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Visão geral do sistema</p>
+          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Visão geral do sistema - Sincronizado em tempo real 🔥</p>
           
           <!-- Cards de estatísticas -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 32px;">
@@ -899,7 +930,7 @@
             <div id="dashboard-recent-rids" style="max-height: 300px; overflow-y: auto;" class="scrollable"></div>
           </div>
           
-          <!-- Top 3 Funcionários do M��s -->
+          <!-- Top 3 Funcionários do Mês -->
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
             <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Top 3 Funcionários com Mais RIDs</h2>
             
@@ -927,12 +958,9 @@
       
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas RIDs (excluir usuários cadastrados)
-      const ridsData = currentData.filter(r => r.tipo_usuario === 'funcionario');
-      
       // Contar RIDs por funcionário e obter última atualização
       const contagemPorFuncionario = {};
-      ridsData.forEach(r => {
+      currentData.forEach(r => {
         if (r.nome_funcionario) {
           if (!contagemPorFuncionario[r.nome_funcionario]) {
             contagemPorFuncionario[r.nome_funcionario] = {
@@ -971,7 +999,7 @@
         `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`,
         `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CD7F32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`
       ];
-      const departamentos = ['Produção', 'Manutenção', 'Qualidade']; // Departamentos de exemplo
+      const departamentos = ['Produção', 'Manutenção', 'Qualidade'];
       
       container.innerHTML = ranking.map((func, index) => {
         const dataFormatada = new Date(func.ultimaAtualizacao).toLocaleDateString('pt-BR', { 
@@ -982,7 +1010,6 @@
           minute: '2-digit'
         });
         
-        // Atribuir departamento baseado no índice (exemplo)
         const departamento = departamentos[index % departamentos.length];
         
         return `
@@ -1006,18 +1033,15 @@
       
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas RIDs (excluir usuários cadastrados)
-      const ridsData = currentData.filter(r => r.tipo_usuario === 'funcionario');
-      
-      // Calcular in��cio da semana (domingo)
+      // Calcular início da semana (domingo)
       const hoje = new Date();
-      const diaSemana = hoje.getDay(); // 0 = domingo, 1 = segunda, etc
+      const diaSemana = hoje.getDay();
       const inicioSemana = new Date(hoje);
       inicioSemana.setDate(hoje.getDate() - diaSemana);
       inicioSemana.setHours(0, 0, 0, 0);
       
       // Filtrar RIDs da semana atual
-      const ridsDaSemana = ridsData.filter(r => {
+      const ridsDaSemana = currentData.filter(r => {
         const dataRid = new Date(r.data_criacao);
         return dataRid >= inicioSemana;
       });
@@ -1041,8 +1065,8 @@
         return `
         <div style="display: grid; grid-template-columns: 80px 2fr 1.5fr 1.2fr 1fr; gap: 16px; padding: 14px 16px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; align-items: center;">
           <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">#${String(index + 1).padStart(3, '0')}</div>
-          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.titulo}</div>
-          <div style="font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">${r.nome_funcionario}</div>
+          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.titulo || 'Sem título'}</div>
+          <div style="font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">${r.nome_funcionario || '-'}</div>
           <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">${dataFormatada}</div>
           <div>
             <span style="padding: 4px 12px; background: ${getStatusColor(r.status, config)}20; color: ${getStatusColor(r.status, config)}; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; display: inline-block;">
@@ -1069,565 +1093,70 @@
     }
     
     // ============================================
-    // SEÇÃO RIDs
+    // SEÇÃO RIDs (SIMPLIFICADA)
     // ============================================
     function renderRidsSection(content) {
       const config = window.elementSdk?.config || defaultConfig;
       
       content.innerHTML = `
         <div class="fade-in">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
-            <div>
-              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Gestão de RIDs</h1>
-              <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Gerencie todos os registros do sistema</p>
-            </div>
-            <button id="btn-novo-rid" style="padding: 12px 20px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
-              ${icons.plus}
-              <span>Novo RID</span>
-            </button>
-          </div>
+          <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Gestão de RIDs</h1>
+          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Todos os RIDs sincronizados em tempo real 🔥</p>
           
-          <!-- Botão Filtros -->
-          <div style="margin-bottom: 20px;">
-            <button id="btn-toggle-filtros" style="padding: 10px 16px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-              <span>Filtros</span>
-            </button>
-          </div>
-          
-          <!-- Filtros (inicialmente escondidos) -->
-          <div id="filtros-container" style="display: none; background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-              <div style="flex: 1; min-width: 200px;">
-                <label for="filter-status" style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
-                <select id="filter-status" style="width: 100%; padding: 8px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 6px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                  <option value="todos">Todos</option>
-                  <option value="Em aberto">Em aberto</option>
-                  <option value="Vencidos">Vencidos</option>
-                  <option value="Corrigidos">Corrigidos</option>
-                </select>
-              </div>
-              <div style="flex: 1; min-width: 200px;">
-                <label for="filter-funcionario" style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Funcionário</label>
-                <select id="filter-funcionario" style="width: 100%; padding: 8px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 6px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                  <option value="todos">Todos</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Lista de RIDs -->
-          <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
-            <!-- Cabeçalho das colunas -->
-            <div style="display: grid; grid-template-columns: 80px 1.5fr 1fr 1.2fr 2fr 1fr 1fr 1fr; gap: 16px; padding: 16px 20px; background: ${config.background_color || defaultConfig.background_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30;">
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">ID</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Emitente</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Setor</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Local</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Descrição</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Risco</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Data</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Status</div>
-            </div>
-            
-            <!-- Lista de RIDs -->
-            <div id="rids-list" style="display: flex; flex-direction: column;"></div>
-          </div>
-          
-          <!-- Modal Visualizar RID -->
-          <div id="modal-visualizar-rid" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 16px; padding: 32px; width: 90%; max-width: 700px; max-height: 90%; overflow-y: auto;" class="scrollable">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
-                <h2 style="margin: 0; font-size: 22px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Detalhes do RID</h2>
-                <button id="btn-fechar-visualizar" style="padding: 8px; border: none; background: none; cursor: pointer; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.6; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
-                  ${icons.x}
-                </button>
-              </div>
-              
-              <div id="rid-detalhes-content" style="display: flex; flex-direction: column; gap: 20px;">
-                <!-- Conteúdo será preenchido dinamicamente -->
-              </div>
-              
-              <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20;">
-                <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Editar RID</h3>
-                <form id="form-editar-rid" style="display: flex; flex-direction: column; gap: 16px;">
-                  <div>
-                    <label for="editar-rid-status" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
-                    <select id="editar-rid-status" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                      <option value="Em aberto">Em aberto</option>
-                      <option value="Vencidos">Vencidos</option>
-                      <option value="Corrigidos">Corrigidos</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label for="editar-rid-risco" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Classificação de Risco</label>
-                    <select id="editar-rid-risco" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                      <option value="Baixo">Baixo</option>
-                      <option value="Médio">Médio</option>
-                      <option value="Alto">Alto</option>
-                      <option value="Crítico">Crítico</option>
-                    </select>
-                  </div>
-                  
-                  <div style="display: flex; gap: 12px; margin-top: 8px;">
-                    <button type="button" id="btn-cancelar-editar" style="flex: 1; padding: 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: ${config.text_color || defaultConfig.text_color};">
-                      Cancelar
-                    </button>
-                    <button type="button" id="btn-designar-rid" style="flex: 1; padding: 12px; border: 1px solid ${config.primary_action_color || defaultConfig.primary_action_color}; background: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: ${config.primary_action_color || defaultConfig.primary_action_color};">
-                      Designar
-                    </button>
-                    <button type="submit" id="btn-salvar-edicao" style="flex: 1; padding: 12px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                      <span id="btn-salvar-edicao-text">Salvar Alterações</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Modal Novo RID -->
-          <div id="modal-novo-rid" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 16px; padding: 32px; width: 90%; max-width: 500px; max-height: 90%; overflow-y: auto;" class="scrollable">
-              <h2 style="margin: 0 0 24px 0; font-size: 22px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Novo RID</h2>
-              <form id="form-novo-rid" style="display: flex; flex-direction: column; gap: 20px;">
-                <div>
-                  <label for="novo-rid-funcionario" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Funcionário</label>
-                  <input id="novo-rid-funcionario" type="text" required style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
-                </div>
-                <div>
-                  <label for="novo-rid-titulo" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Título</label>
-                  <input id="novo-rid-titulo" type="text" required style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
-                </div>
-                <div>
-                  <label for="novo-rid-descricao" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Descrição</label>
-                  <textarea id="novo-rid-descricao" required rows="4" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; resize: vertical; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};"></textarea>
-                </div>
-                <div>
-                  <label for="novo-rid-status" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
-                  <select id="novo-rid-status" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                    <option value="Em aberto">Em aberto</option>
-                    <option value="Vencidos">Vencidos</option>
-                    <option value="Corrigidos">Corrigidos</option>
-                  </select>
-                </div>
-                <div style="display: flex; gap: 12px; margin-top: 8px;">
-                  <button type="button" id="btn-cancelar-rid" style="flex: 1; padding: 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: ${config.text_color || defaultConfig.text_color};">
-                    Cancelar
-                  </button>
-                  <button type="submit" id="btn-salvar-rid" style="flex: 1; padding: 12px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                    <span id="btn-salvar-rid-text">Salvar</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <div id="rids-list-container"></div>
         </div>
       `;
       
-      attachRidsListeners();
       renderRidsList();
     }
     
-    let ridSendoEditado = null;
-    
-    function attachRidsListeners() {
-      const btnNovo = $('btn-novo-rid');
-      const modal = $('modal-novo-rid');
-      const btnCancelar = $('btn-cancelar-rid');
-      const form = $('form-novo-rid');
-      
-      // Botão toggle filtros
-      const btnToggleFiltros = $('btn-toggle-filtros');
-      const filtrosContainer = $('filtros-container');
-      if (btnToggleFiltros && filtrosContainer) {
-        btnToggleFiltros.addEventListener('click', () => {
-          if (filtrosContainer.style.display === 'none') {
-            filtrosContainer.style.display = 'block';
-            filtrosContainer.classList.add('fade-in');
-          } else {
-            filtrosContainer.style.display = 'none';
-          }
-        });
-      }
-      
-      if (btnNovo && modal) {
-        btnNovo.addEventListener('click', () => {
-          if (currentRecordCount >= 999) {
-            showMessage('Limite máximo de 999 RIDs atingido', 'error');
-            return;
-          }
-          modal.style.display = 'flex';
-        });
-      }
-      
-      if (btnCancelar && modal) {
-        btnCancelar.addEventListener('click', () => {
-          modal.style.display = 'none';
-          form.reset();
-        });
-      }
-      
-      if (modal) {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            modal.style.display = 'none';
-            form.reset();
-          }
-        });
-      }
-      
-      if (form) {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          
-          if (!window.dataSdk) {
-            showMessage('Sistema de dados não disponível', 'error');
-            return;
-          }
-          
-          if (currentRecordCount >= 999) {
-            showMessage('Limite máximo de 999 RIDs atingido', 'error');
-            return;
-          }
-          
-          const funcionario = $('novo-rid-funcionario').value.trim();
-          const titulo = $('novo-rid-titulo').value.trim();
-          const descricao = $('novo-rid-descricao').value.trim();
-          const status = $('novo-rid-status').value;
-          
-          if (!funcionario || !titulo || !descricao) {
-            showMessage('Preencha todos os campos', 'error');
-            return;
-          }
-          
-          const btnSalvar = $('btn-salvar-rid');
-          const btnText = $('btn-salvar-rid-text');
-          if (btnSalvar && btnText) {
-            btnSalvar.disabled = true;
-            btnText.innerHTML = '<div class="spinner"></div>';
-          }
-          
-          const now = new Date().toISOString();
-          const record = {
-            tipo_usuario: 'funcionario',
-            nome_funcionario: funcionario,
-            titulo,
-            descricao,
-            status,
-            data_criacao: now,
-            ultimo_update: now
-          };
-          
-          const result = await window.dataSdk.create(record);
-          
-          if (btnSalvar && btnText) {
-            btnSalvar.disabled = false;
-            btnText.textContent = 'Salvar';
-          }
-          
-          if (result.isOk) {
-            showMessage('RID criado com sucesso!', 'success');
-            modal.style.display = 'none';
-            form.reset();
-          } else {
-            showMessage('Erro ao criar RID', 'error');
-          }
-        });
-      }
-      
-      const filterStatus = $('filter-status');
-      const filterFunc = $('filter-funcionario');
-      
-      if (filterStatus) {
-        filterStatus.addEventListener('change', renderRidsList);
-      }
-      if (filterFunc) {
-        filterFunc.addEventListener('change', renderRidsList);
-      }
-      
-      // Modal Visualizar RID
-      const modalVisualizar = $('modal-visualizar-rid');
-      const btnFecharVisualizar = $('btn-fechar-visualizar');
-      const btnCancelarEditar = $('btn-cancelar-editar');
-      const formEditar = $('form-editar-rid');
-      
-      if (btnFecharVisualizar && modalVisualizar) {
-        btnFecharVisualizar.addEventListener('click', () => {
-          modalVisualizar.style.display = 'none';
-          ridSendoEditado = null;
-        });
-      }
-      
-      if (btnCancelarEditar && modalVisualizar) {
-        btnCancelarEditar.addEventListener('click', () => {
-          modalVisualizar.style.display = 'none';
-          ridSendoEditado = null;
-        });
-      }
-      
-      if (modalVisualizar) {
-        modalVisualizar.addEventListener('click', (e) => {
-          if (e.target === modalVisualizar) {
-            modalVisualizar.style.display = 'none';
-            ridSendoEditado = null;
-          }
-        });
-      }
-      
-      if (formEditar) {
-        formEditar.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          
-          if (!window.dataSdk || !ridSendoEditado) {
-            showMessage('Erro ao salvar alterações', 'error');
-            return;
-          }
-          
-          const novoStatus = $('editar-rid-status').value;
-          const novoRisco = $('editar-rid-risco').value;
-          
-          const btnSalvar = $('btn-salvar-edicao');
-          const btnText = $('btn-salvar-edicao-text');
-          if (btnSalvar && btnText) {
-            btnSalvar.disabled = true;
-            btnText.innerHTML = '<div class="spinner"></div>';
-          }
-          
-          const ridAtualizado = {
-            ...ridSendoEditado,
-            status: novoStatus,
-            classificacao_risco: novoRisco
-          };
-          
-          const result = await window.dataSdk.update(ridAtualizado);
-          
-          if (btnSalvar && btnText) {
-            btnSalvar.disabled = false;
-            btnText.textContent = 'Salvar Alterações';
-          }
-          
-          if (result.isOk) {
-            showMessage('RID atualizado com sucesso!', 'success');
-            if (modalVisualizar) modalVisualizar.style.display = 'none';
-            ridSendoEditado = null;
-          } else {
-            showMessage('Erro ao atualizar RID', 'error');
-          }
-        });
-      }
-      
-    }
-    
-    function attachRidRowListeners() {
-      // Esta função será chamada após renderizar a lista
-    }
-    
-    function abrirModalVisualizarRid(rid) {
-      const modal = $('modal-visualizar-rid');
-      const content = $('rid-detalhes-content');
-      const config = window.elementSdk?.config || defaultConfig;
-      
-      if (!modal || !content) return;
-      
-      ridSendoEditado = rid;
-      
-      // Preencher detalhes
-      const dataFormatada = new Date(rid.data_criacao).toLocaleDateString('pt-BR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      
-      const emitente = rid.emitente || rid.nome_funcionario || '-';
-      const tipoContrato = rid.tipo_contrato || '-';
-      const unidade = rid.unidade || '-';
-      const setor = rid.setor || '-';
-      const dataOcorrencia = rid.data_ocorrencia ? new Date(rid.data_ocorrencia).toLocaleDateString('pt-BR') : '-';
-      const incidente = rid.incidente || '-';
-      const origem = rid.origem_deteccao || '-';
-      const local = rid.local_ocorrencia || '-';
-      const descricao = rid.descricao || '-';
-      const risco = rid.classificacao_risco || '-';
-      const acao = rid.acao_imediata || '-';
-      const status = rid.status || '-';
-      
-      content.innerHTML = `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Emitente</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${emitente}</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Tipo de Contrato</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${tipoContrato}</div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Unidade</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${unidade}</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Setor</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${setor}</div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Data da Ocorrência</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${dataOcorrencia}</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Data de Registro</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${dataFormatada}</div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Incidente/Desvio</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${incidente}</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Origem da Detecção</div>
-            <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${origem}</div>
-          </div>
-        </div>
-        
-        <div>
-          <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Local da Ocorrência</div>
-          <div style="font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">${local}</div>
-        </div>
-        
-        <div>
-          <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Descrição da Ocorrência</div>
-          <div style="font-size: 14px; line-height: 1.6; color: ${config.text_color || defaultConfig.text_color};">${descricao}</div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Classificação de Risco</div>
-            <div style="font-size: 14px; font-weight: 600; color: ${getRiscoColor(risco)};">${risco}</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Status</div>
-            <div>
-              <span style="padding: 6px 12px; background: ${getStatusColor(status, config)}20; color: ${getStatusColor(status, config)}; border-radius: 6px; font-size: 13px; font-weight: 500; display: inline-block;">
-                ${status}
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <div style="font-size: 12px; font-weight: 600; opacity: 0.6; margin-bottom: 4px; color: ${config.text_color || defaultConfig.text_color};">Ação Imediata</div>
-          <div style="font-size: 14px; line-height: 1.6; color: ${config.text_color || defaultConfig.text_color};">${acao}</div>
-        </div>
-      `;
-      
-      // Preencher formulário de edição
-      const selectStatus = $('editar-rid-status');
-      const selectRisco = $('editar-rid-risco');
-      
-      if (selectStatus) selectStatus.value = rid.status || 'Em aberto';
-      if (selectRisco) selectRisco.value = rid.classificacao_risco || 'Baixo';
-      
-      modal.style.display = 'flex';
-    }
-    
     function renderRidsList() {
-      const container = $('rids-list');
+      const container = $('rids-list-container');
       if (!container) return;
       
       const config = window.elementSdk?.config || defaultConfig;
-      const filterStatus = $('filter-status')?.value || 'todos';
-      const filterFunc = $('filter-funcionario')?.value || 'todos';
       
-      // Filtrar apenas RIDs (excluir usuários cadastrados)
-      const ridsData = currentData.filter(r => r.tipo_usuario === 'funcionario');
-      
-      // Atualizar select de funcionários
-      const selectFunc = $('filter-funcionario');
-      if (selectFunc) {
-        const funcionarios = Array.from(new Set(ridsData.map(r => r.nome_funcionario).filter(Boolean))).sort();
-        const currentValue = selectFunc.value;
-        selectFunc.innerHTML = '<option value="todos">Todos</option>' + 
-          funcionarios.map(f => `<option value="${f}">${f}</option>`).join('');
-        if (currentValue && (currentValue === 'todos' || funcionarios.includes(currentValue))) {
-          selectFunc.value = currentValue;
-        }
-      }
-      
-      let filtered = ridsData;
-      if (filterStatus !== 'todos') {
-        filtered = filtered.filter(r => r.status === filterStatus);
-      }
-      if (filterFunc !== 'todos') {
-        filtered = filtered.filter(r => r.nome_funcionario === filterFunc);
-      }
-      
-      if (filtered.length === 0) {
+      if (currentData.length === 0) {
         container.innerHTML = `
-          <div style="padding: 40px; text-align: center;">
+          <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 60px 40px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
             <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Nenhum RID encontrado</p>
           </div>
         `;
         return;
       }
       
-      container.innerHTML = filtered
-        .slice()
-        .sort((a, b) => new Date(b.data_criacao).getTime() - new Date(a.data_criacao).getTime())
-        .map((r, index) => {
-          const dataFormatada = new Date(r.data_criacao).toLocaleDateString('pt-BR', { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric' 
-          });
-          
-          const emitente = r.emitente || r.nome_funcionario || '-';
-          const setor = r.setor || '-';
-          const local = r.local_ocorrencia || '-';
-          const descricao = r.descricao || '-';
-          const risco = r.classificacao_risco || '-';
-          
-          return `
-          <div class="rid-row" data-rid-id="${r.__backendId}" style="display: grid; grid-template-columns: 80px 1.5fr 1fr 1.2fr 2fr 1fr 1fr 1fr; gap: 16px; padding: 16px 20px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; align-items: center; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.background='${config.background_color || defaultConfig.background_color}50'" onmouseout="this.style.background='transparent'">
-            <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">#${String(index + 1).padStart(3, '0')}</div>
-            <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${emitente}">${emitente}</div>
-            <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${setor}">${setor}</div>
-            <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${local}">${local}</div>
-            <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${descricao}">${descricao}</div>
-            <div style="font-size: 12px; font-weight: 600; color: ${getRiscoColor(risco)}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${risco}</div>
-            <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">${dataFormatada}</div>
-            <div>
-              <span style="padding: 6px 12px; background: ${getStatusColor(r.status, config)}20; color: ${getStatusColor(r.status, config)}; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; display: inline-block;">
-                ${r.status}
-              </span>
+      container.innerHTML = `
+        <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
+          ${currentData.map((r, index) => {
+            const dataFormatada = new Date(r.data_criacao).toLocaleDateString('pt-BR', { 
+              day: '2-digit', 
+              month: '2-digit', 
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+            
+            return `
+            <div style="padding: 20px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20;">
+              <div style="display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 12px;">
+                <div style="flex: 1;">
+                  <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">${r.titulo || 'Sem título'}</h3>
+                  <p style="margin: 0; font-size: 13px; opacity: 0.7; line-height: 1.5; color: ${config.text_color || defaultConfig.text_color};">${r.descricao || 'Sem descrição'}</p>
+                </div>
+                <span style="padding: 6px 12px; background: ${getStatusColor(r.status, config)}20; color: ${getStatusColor(r.status, config)}; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap;">
+                  ${r.status}
+                </span>
+              </div>
+              <div style="display: flex; gap: 20px; font-size: 12px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">
+                <span><strong>Funcionário:</strong> ${r.nome_funcionario || '-'}</span>
+                <span><strong>Data:</strong> ${dataFormatada}</span>
+                ${r.classificacao_risco ? `<span><strong>Risco:</strong> <span style="color: ${getRiscoColor(r.classificacao_risco)}; font-weight: 600;">${r.classificacao_risco}</span></span>` : ''}
+              </div>
             </div>
-          </div>
-        `;
-        }).join('');
-      
-      // Adicionar eventos de clique após renderizar
-      setTimeout(() => {
-        const ridRows = document.querySelectorAll('.rid-row');
-        ridRows.forEach(row => {
-          row.addEventListener('click', () => {
-            const ridId = row.dataset.ridId;
-            const rid = currentData.find(r => r.__backendId === ridId);
-            if (rid) {
-              abrirModalVisualizarRid(rid);
-            }
-          });
-        });
-      }, 100);
-
+          `;
+          }).join('')}
+        </div>
+      `;
     }
     
     // ============================================
@@ -1636,29 +1165,12 @@
     function renderFuncionariosSection(content) {
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas usuários cadastrados
-      const funcionariosCadastrados = currentData.filter(r => r.tipo_usuario === 'usuario_cadastrado');
-      
       content.innerHTML = `
         <div class="fade-in">
           <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Funcionários</h1>
-          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcionários cadastrados no sistema</p>
+          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcionários cadastrados - Sincronizado em tempo real 🔥</p>
           
-          <!-- Lista de Funcionários -->
-          <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
-            <!-- Cabeçalho das colunas -->
-            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1fr 1fr; gap: 16px; padding: 16px 20px; background: ${config.background_color || defaultConfig.background_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30;">
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Nome</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">CPF</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Departamento</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Data Cadastro</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Status</div>
-              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Ações</div>
-            </div>
-            
-            <!-- Lista de funcionários -->
-            <div id="funcionarios-list" style="display: flex; flex-direction: column;"></div>
-          </div>
+          <div id="funcionarios-list-container"></div>
         </div>
       `;
       
@@ -1666,19 +1178,14 @@
     }
     
     function renderFuncionariosList() {
-      const container = $('funcionarios-list');
+      const container = $('funcionarios-list-container');
       if (!container) return;
       
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas usuários cadastrados
-      const funcionariosCadastrados = currentData
-        .filter(r => r.tipo_usuario === 'usuario_cadastrado')
-        .sort((a, b) => new Date(b.data_criacao).getTime() - new Date(a.data_criacao).getTime());
-      
-      if (funcionariosCadastrados.length === 0) {
+      if (currentFuncionarios.length === 0) {
         container.innerHTML = `
-          <div style="padding: 40px; text-align: center;">
+          <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 60px 40px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
             <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Nenhum funcionário cadastrado ainda</p>
           </div>
         `;
@@ -1687,126 +1194,41 @@
       
       const departamentos = ['Produção', 'Manutenção', 'Qualidade', 'Administração', 'Logística'];
       
-      container.innerHTML = funcionariosCadastrados.map((func, index) => {
-        const dataFormatada = new Date(func.data_criacao).toLocaleDateString('pt-BR', { 
-          day: '2-digit', 
-          month: '2-digit', 
-          year: 'numeric' 
-        });
-        
-        const cpfFormatado = func.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        const departamento = departamentos[index % departamentos.length];
-        
-        return `
-        <div style="display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1fr 1fr; gap: 16px; padding: 16px 20px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; background: ${config.primary_action_color || defaultConfig.primary_action_color}20; display: flex; align-items: center; justify-content: center; color: ${config.primary_action_color || defaultConfig.primary_action_color}; flex-shrink: 0;">
-              ${icons.user}
+      container.innerHTML = `
+        <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
+          ${currentFuncionarios.map((func, index) => {
+            const dataFormatada = new Date(func.data_criacao).toLocaleDateString('pt-BR', { 
+              day: '2-digit', 
+              month: '2-digit', 
+              year: 'numeric' 
+            });
+            
+            const cpfFormatado = func.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            const departamento = departamentos[index % departamentos.length];
+            
+            return `
+            <div style="padding: 20px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 16px; flex: 1;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: ${config.primary_action_color || defaultConfig.primary_action_color}20; display: flex; align-items: center; justify-content: center; color: ${config.primary_action_color || defaultConfig.primary_action_color}; flex-shrink: 0;">
+                  ${icons.user}
+                </div>
+                <div style="flex: 1;">
+                  <h3 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">${func.nome_completo}</h3>
+                  <div style="display: flex; gap: 16px; font-size: 12px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">
+                    <span><strong>CPF:</strong> ${cpfFormatado}</span>
+                    <span><strong>Depto:</strong> ${departamento}</span>
+                    <span><strong>Cadastro:</strong> ${dataFormatada}</span>
+                  </div>
+                </div>
+              </div>
+              <span style="padding: 6px 12px; background: #22c55e20; color: #22c55e; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">
+                ATIVO
+              </span>
             </div>
-            <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${func.nome_completo}">${func.nome_completo}</div>
-          </div>
-          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; font-family: monospace;">${cpfFormatado}</div>
-          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color};">${departamento}</div>
-          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">${dataFormatada}</div>
-          <div>
-            <span style="padding: 4px 10px; background: #22c55e20; color: #22c55e; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; display: inline-block;">
-              ATIVO
-            </span>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-editar-func" data-func-id="${func.__backendId}" style="padding: 6px 10px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;" onmouseover="this.style.background='${config.background_color || defaultConfig.background_color}'" onmouseout="this.style.background='none'">
-              ${icons.edit}
-            </button>
-            <button class="btn-deletar-func" data-func-id="${func.__backendId}" style="padding: 6px 10px; border: 1px solid #ff6b6b40; background: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #ff6b6b; transition: background 0.2s;" onmouseover="this.style.background='#ff6b6b10'" onmouseout="this.style.background='none'">
-              ${icons.trash}
-            </button>
-          </div>
+          `;
+          }).join('')}
         </div>
       `;
-      }).join('');
-      
-      // Adicionar eventos de clique após renderizar
-      setTimeout(() => {
-        const btnsEditar = document.querySelectorAll('.btn-editar-func');
-        const btnsDeletar = document.querySelectorAll('.btn-deletar-func');
-        
-        btnsEditar.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const funcId = btn.dataset.funcId;
-            const func = currentData.find(f => f.__backendId === funcId);
-            if (func) {
-              showMessage('Funcionalidade de edição em desenvolvimento', 'info');
-            }
-          });
-        });
-        
-        btnsDeletar.forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const funcId = btn.dataset.funcId;
-            const func = currentData.find(f => f.__backendId === funcId);
-            if (func) {
-              // Confirmação inline
-              const confirmDiv = document.createElement('div');
-              confirmDiv.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: ${config.surface_color || defaultConfig.surface_color};
-                padding: 24px;
-                border-radius: 12px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-                z-index: 10000;
-                min-width: 300px;
-              `;
-              
-              confirmDiv.innerHTML = `
-                <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Confirmar exclusão</h3>
-                <p style="margin: 0 0 20px 0; font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8;">Tem certeza que deseja excluir o funcionário <strong>${func.nome_completo}</strong>?</p>
-                <div style="display: flex; gap: 12px;">
-                  <button id="btn-cancelar-delete" style="flex: 1; padding: 10px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: ${config.text_color || defaultConfig.text_color};">
-                    Cancelar
-                  </button>
-                  <button id="btn-confirmar-delete" style="flex: 1; padding: 10px; border: none; background: #ff6b6b; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                    Excluir
-                  </button>
-                </div>
-              `;
-              
-              document.body.appendChild(confirmDiv);
-              
-              const btnCancelar = document.getElementById('btn-cancelar-delete');
-              const btnConfirmar = document.getElementById('btn-confirmar-delete');
-              
-              btnCancelar.addEventListener('click', () => {
-                confirmDiv.remove();
-              });
-              
-              btnConfirmar.addEventListener('click', async () => {
-                if (!window.dataSdk) {
-                  showMessage('Sistema de dados não disponível', 'error');
-                  confirmDiv.remove();
-                  return;
-                }
-                
-                btnConfirmar.disabled = true;
-                btnConfirmar.innerHTML = '<div class="spinner"></div>';
-                
-                const result = await window.dataSdk.delete(func);
-                
-                if (result.isOk) {
-                  showMessage('Funcionário excluído com sucesso!', 'success');
-                  confirmDiv.remove();
-                } else {
-                  showMessage('Erro ao excluir funcionário', 'error');
-                  btnConfirmar.disabled = false;
-                  btnConfirmar.textContent = 'Excluir';
-                }
-              });
-            }
-          });
-        });
-      }, 100);
     }
     
     // ============================================
@@ -1817,7 +1239,7 @@
       
       content.innerHTML = `
         <div class="fade-in">
-          <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Relat����rios</h1>
+          <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Relatórios</h1>
           <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Análises e relatórios do sistema</p>
           
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 60px 40px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
@@ -1838,11 +1260,6 @@
       const container = $('app-container');
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas RIDs do funcionário logado (excluir usuários cadastrados)
-      const meusRids = currentData.filter(r => 
-        r.tipo_usuario === 'funcionario' && r.nome_funcionario === currentUser.nome
-      );
-      
       container.innerHTML = `
         <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: ${config.background_color || defaultConfig.background_color};">
           <!-- Header -->
@@ -1850,7 +1267,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div>
                 <h1 id="func-panel-title" style="margin: 0 0 4px 0; font-size: 22px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};"></h1>
-                <p style="margin: 0; font-size: 13px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">Bem-vindo, ${currentUser.nome}</p>
+                <p style="margin: 0; font-size: 13px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">Bem-vindo, ${currentUser.nome} 🔥</p>
               </div>
               <button id="btn-func-logout" style="padding: 10px 16px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">
                 ${icons.logout}
@@ -1862,15 +1279,17 @@
           <!-- Main Content -->
           <main style="flex: 1; overflow-y: auto; padding: 32px;" class="scrollable">
             <div style="max-width: 1000px; margin: 0 auto;">
+              <!-- Botão Novo RID -->
+              <div style="margin-bottom: 24px;">
+                <button id="btn-abrir-modal-rid" style="padding: 14px 24px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
+                  ${icons.plus}
+                  <span>Emitir Novo RID</span>
+                </button>
+              </div>
+              
               <!-- Meus RIDs -->
               <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                  <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Meus RIDs</h2>
-                  <button id="btn-abrir-modal-rid" style="padding: 10px 16px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;">
-                    ${icons.plus}
-                    <span>Novo RID</span>
-                  </button>
-                </div>
+                <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Meus RIDs</h2>
                 <div id="func-rids-list"></div>
               </div>
             </div>
@@ -1914,7 +1333,7 @@
                     <option value="ADM">ADM</option>
                     <option value="M. MOVEL">M. MOVEL</option>
                     <option value="M. FIXA">M. FIXA</option>
-                    <option value="M. EL������TRICA">M. ELÉTRICA</option>
+                    <option value="M. ELÉTRICA">M. ELÉTRICA</option>
                     <option value="PRODUÇÃO">PRODUÇÃO</option>
                     <option value="MINA">MINA</option>
                   </select>
@@ -2038,10 +1457,6 @@
       
       if (btnAbrirModal && modal) {
         btnAbrirModal.addEventListener('click', () => {
-          if (currentRecordCount >= 999) {
-            showMessage('Limite máximo de 999 RIDs atingido', 'error');
-            return;
-          }
           modal.style.display = 'flex';
         });
       }
@@ -2066,13 +1481,8 @@
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           
-          if (!window.dataSdk) {
+          if (!window.salvarRIDFirebase) {
             showMessage('Sistema de dados não disponível', 'error');
-            return;
-          }
-          
-          if (currentRecordCount >= 999) {
-            showMessage('Limite máximo de 999 RIDs atingido', 'error');
             return;
           }
           
@@ -2101,40 +1511,34 @@
             btnText.innerHTML = '<div class="spinner"></div>';
           }
           
-          const now = new Date().toISOString();
-          const record = {
-            tipo_usuario: 'funcionario',
-            nome_funcionario: currentUser.nome,
-            emitente: emitente,
-            tipo_contrato: tipoContrato,
-            unidade: unidade,
-            setor: setor,
-            data_ocorrencia: data,
-            incidente: incidente,
-            origem_deteccao: origem,
-            local_ocorrencia: local,
-            titulo: `${incidente} - ${local}`,
-            descricao: descricao,
-            classificacao_risco: risco,
-            acao_imediata: acao,
-            status: status,
-            data_criacao: now,
-            ultimo_update: now
-          };
-          
-          const result = await window.dataSdk.create(record);
-          
-          if (btnSalvar && btnText) {
-            btnSalvar.disabled = false;
-            btnText.textContent = 'Registrar RID';
-          }
-          
-          if (result.isOk) {
-            showMessage('RID registrado com sucesso!', 'success');
+          try {
+            await window.salvarRIDFirebase({
+              nome_funcionario: currentUser.nome,
+              emitente: emitente,
+              tipo_contrato: tipoContrato,
+              unidade: unidade,
+              setor: setor,
+              data_ocorrencia: data,
+              incidente: incidente,
+              origem_deteccao: origem,
+              local_ocorrencia: local,
+              titulo: `${incidente} - ${local}`,
+              descricao: descricao,
+              classificacao_risco: risco,
+              acao_imediata: acao,
+              status: status
+            });
+            
+            showMessage('RID registrado com sucesso! Sincronizado na nuvem 🔥', 'success');
             if (modal) modal.style.display = 'none';
             form.reset();
-          } else {
+          } catch (error) {
             showMessage('Erro ao registrar RID', 'error');
+          } finally {
+            if (btnSalvar && btnText) {
+              btnSalvar.disabled = false;
+              btnText.textContent = 'Registrar RID';
+            }
           }
         });
       }
@@ -2146,9 +1550,9 @@
       
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Filtrar apenas RIDs do funcionário logado (excluir usuários cadastrados)
+      // Filtrar apenas RIDs do funcionário logado
       const meusRids = currentData
-        .filter(r => r.tipo_usuario === 'funcionario' && r.nome_funcionario === currentUser.nome)
+        .filter(r => r.nome_funcionario === currentUser.nome)
         .sort((a, b) => new Date(b.data_criacao).getTime() - new Date(a.data_criacao).getTime());
       
       if (meusRids.length === 0) {
@@ -2243,7 +1647,7 @@
     function initElementSdk() {
       if (!window.elementSdk) {
         render();
-        initDataSdk();
+        iniciarSincronizacaoFirebase();
         return;
       }
       
@@ -2312,168 +1716,7 @@
       });
       
       render();
-      initDataSdk();
-    }
-    
-    // ============================================
-    // DATA SDK
-    // ============================================
-    function initDataSdk() {
-      if (!window.dataSdk) return;
-      
-      const handler = {
-        onDataChanged: (data) => {
-          currentData = data || [];
-          currentRecordCount = currentData.length;
-          
-          if (currentUser) {
-            if (currentUser.tipo === 'admin') {
-              if (currentAdminSection === 'dashboard') {
-                const dashContent = $('admin-content');
-                if (dashContent) {
-                  renderDashboard(dashContent);
-                }
-              } else if (currentAdminSection === 'rids') {
-                renderRidsList();
-              } else if (currentAdminSection === 'funcionarios') {
-                renderFuncionariosSection($('admin-content'));
-              }
-            } else {
-              renderFuncRidsList();
-            }
-          }
-        }
-      };
-      
-      (async () => {
-        const result = await window.dataSdk.init(handler);
-        if (!result.isOk) {
-          showMessage('Erro ao conectar com o sistema de dados', 'error');
-          return;
-        }
-        
-        // Adicionar dados de exemplo apenas se o banco estiver vazio
-        if (currentData.length === 0) {
-          await adicionarDadosExemplo();
-        }
-      })();
-    }
-    
-    // ============================================
-    // DADOS DE EXEMPLO
-    // ============================================
-    async function adicionarDadosExemplo() {
-      if (!window.dataSdk) return;
-      
-      const funcionarios = [
-        'Carlos Silva',
-        'Ana Santos',
-        'Pedro Oliveira',
-        'Maria Costa',
-        'João Ferreira'
-      ];
-      
-      const ridsExemplo = [
-        {
-          nome_funcionario: 'Carlos Silva',
-          titulo: 'Falha no sistema de refrigeração',
-          descricao: 'A máquina de produção linha 3 apresentou superaquecimento devido a falha no sistema de refrigeração. Necessário manutenção urgente.',
-          status: 'Em aberto'
-        },
-        {
-          nome_funcionario: 'Carlos Silva',
-          titulo: 'Vazamento de óleo hidráulico',
-          descricao: 'Detectado vazamento de óleo na prensa hidr��ulica do setor B. Risco de contamina��ão ambiental.',
-          status: 'Vencidos'
-        },
-        {
-          nome_funcionario: 'Ana Santos',
-          titulo: 'Equipamento de proteção danificado',
-          descricao: 'Luvas de proteção térmica apresentam rasgos e não oferecem proteção adequada. Solicito substituição imediata.',
-          status: 'Corrigidos'
-        },
-        {
-          nome_funcionario: 'Ana Santos',
-          titulo: 'Iluminação inadequada no setor',
-          descricao: 'Três lâmpadas queimadas no corredor principal do setor de montagem, prejudicando a visibilidade e segurança.',
-          status: 'Em aberto'
-        },
-        {
-          nome_funcionario: 'Ana Santos',
-          titulo: 'Ruído excessivo na área de corte',
-          descricao: 'Nível de ruído acima do permitido na área de corte. Necessário avaliação e implementação de medidas de controle.',
-          status: 'Vencidos'
-        },
-        {
-          nome_funcionario: 'Pedro Oliveira',
-          titulo: 'Piso escorregadio na entrada',
-          descricao: 'Piso molhado sem sinalização adequada na entrada do vestiário. Risco de quedas.',
-          status: 'Corrigidos'
-        },
-        {
-          nome_funcionario: 'Pedro Oliveira',
-          titulo: 'Extintor de incêndio vencido',
-          descricao: 'Extintor localizado próximo ao almoxarifado está com prazo de validade vencido há 2 meses.',
-          status: 'Em aberto'
-        },
-        {
-          nome_funcionario: 'Maria Costa',
-          titulo: 'Falta de sinalização de emergência',
-          descricao: 'Placas de saída de emergência apagadas no segundo andar. Necessário substituição urgente.',
-          status: 'Vencidos'
-        },
-        {
-          nome_funcionario: 'Maria Costa',
-          titulo: 'Cadeira ergon��mica com defeito',
-          descricao: 'Cadeira do posto de trabalho 15 com regulagem de altura quebrada, causando desconforto e má postura.',
-          status: 'Corrigidos'
-        },
-        {
-          nome_funcionario: 'João Ferreira',
-          titulo: 'Ferramenta manual danificada',
-          descricao: 'Chave inglesa com cabo solto representando risco de acidente. Ferramenta deve ser substituída.',
-          status: 'Em aberto'
-        },
-        {
-          nome_funcionario: 'João Ferreira',
-          titulo: 'Falta de kit de primeiros socorros',
-          descricao: 'Kit de primeiros socorros do setor de embalagem está incompleto, faltando itens essenciais como ataduras e antisséptico.',
-          status: 'Vencidos'
-        },
-        {
-          nome_funcionario: 'Carlos Silva',
-          titulo: 'Proteção de máquina removida',
-          descricao: 'Proteção lateral da serra circular foi removida e não recolocada. Risco grave de acidente.',
-          status: 'Corrigidos'
-        }
-      ];
-      
-      // Criar RIDs com datas variadas
-      const agora = new Date();
-      for (let i = 0; i < ridsExemplo.length; i++) {
-        const rid = ridsExemplo[i];
-        const diasAtras = Math.floor(Math.random() * 30); // Entre 0 e 30 dias atrás
-        const dataCriacao = new Date(agora);
-        dataCriacao.setDate(dataCriacao.getDate() - diasAtras);
-        
-        const record = {
-          tipo_usuario: 'funcionario',
-          nome_funcionario: rid.nome_funcionario,
-          titulo: rid.titulo,
-          descricao: rid.descricao,
-          status: rid.status,
-          data_criacao: dataCriacao.toISOString(),
-          ultimo_update: dataCriacao.toISOString()
-        };
-        
-        await window.dataSdk.create(record);
-        
-        // Pequeno delay para não sobrecarregar
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      
-      console.log('������ Dados de exemplo adicionados com sucesso!');
-      showMessage('Dados de exemplo carregados!', 'success');
+      iniciarSincronizacaoFirebase();
     }
     
     // ============================================
@@ -2481,5 +1724,5 @@
     // ============================================
     initElementSdk();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a4581698181f1dd',t:'MTc2NDExOTQyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a458b2be3f5f1dd',t:'MTc2NDExOTgyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
