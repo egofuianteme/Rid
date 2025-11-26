@@ -501,13 +501,14 @@
                 </div>
                 
                 <div>
-                  <label for="cadastro-usuario" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Usuário</label>
+                  <label for="cadastro-cpf" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">CPF</label>
                   <div style="position: relative;">
                     <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; color: ${config.text_color || defaultConfig.text_color};">${icons.user}</span>
                     <input 
-                      id="cadastro-usuario" 
+                      id="cadastro-cpf" 
                       type="text" 
-                      placeholder="Escolha um nome de usuário"
+                      placeholder="000.000.000-00"
+                      maxlength="14"
                       style="width: 100%; padding: 12px 12px 12px 42px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};"
                       required
                     />
@@ -557,7 +558,7 @@
                 <p style="margin: 0 0 12px 0; font-size: 12px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">Credenciais de demonstração:</p>
                 <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: ${config.text_color || defaultConfig.text_color};">
                   <div><strong>Admin:</strong> <code id="demo-admin-user" style="background: ${config.background_color || defaultConfig.background_color}; padding: 2px 6px; border-radius: 4px;"></code> / <code id="demo-admin-pass" style="background: ${config.background_color || defaultConfig.background_color}; padding: 2px 6px; border-radius: 4px;"></code></div>
-                  <div><strong>Funcionário:</strong> use o cadastro acima</div>
+                  <div><strong>Funcionário:</strong> cadastre-se com seu CPF</div>
                 </div>
               </div>
             </div>
@@ -611,10 +612,11 @@
             showMessage('Login realizado com sucesso!', 'success');
             render();
           } else {
-            // Verificar se o usuário está cadastrado
+            // Verificar se o usuário está cadastrado (usando CPF como usuário)
+            const cpfLimpo = usuario.replace(/\D/g, '');
             const usuarioCadastrado = currentData.find(u => 
               u.tipo_usuario === 'usuario_cadastrado' && 
-              u.nome_usuario === usuario && 
+              u.cpf === cpfLimpo && 
               u.senha === senha
             );
             
@@ -623,9 +625,28 @@
               showMessage(`Bem-vindo, ${usuarioCadastrado.nome_completo}!`, 'success');
               render();
             } else {
-              showMessage('Usuário ou senha incorretos', 'error');
+              showMessage('CPF ou senha incorretos', 'error');
             }
           }
+        });
+      }
+      
+      // Máscara de CPF
+      const cpfInput = $('cadastro-cpf');
+      if (cpfInput) {
+        cpfInput.addEventListener('input', (e) => {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 11) value = value.slice(0, 11);
+          
+          if (value.length > 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+          } else if (value.length > 6) {
+            value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+          } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+          }
+          
+          e.target.value = value;
         });
       }
       
@@ -646,12 +667,17 @@
           }
           
           const nomeCompleto = $('cadastro-nome').value.trim();
-          const usuario = $('cadastro-usuario').value.trim();
+          const cpf = $('cadastro-cpf').value.trim().replace(/\D/g, '');
           const senha = $('cadastro-senha').value.trim();
           const confirmaSenha = $('cadastro-confirma-senha').value.trim();
           
-          if (!nomeCompleto || !usuario || !senha || !confirmaSenha) {
+          if (!nomeCompleto || !cpf || !senha || !confirmaSenha) {
             showMessage('Preencha todos os campos', 'error');
+            return;
+          }
+          
+          if (cpf.length !== 11) {
+            showMessage('CPF deve conter 11 dígitos', 'error');
             return;
           }
           
@@ -665,14 +691,14 @@
             return;
           }
           
-          // Verificar se o usuário já existe
-          const usuarioExiste = currentData.find(u => 
+          // Verificar se o CPF já existe
+          const cpfExiste = currentData.find(u => 
             u.tipo_usuario === 'usuario_cadastrado' && 
-            u.nome_usuario === usuario
+            u.cpf === cpf
           );
           
-          if (usuarioExiste) {
-            showMessage('Este nome de usuário já está em uso', 'error');
+          if (cpfExiste) {
+            showMessage('Este CPF já está cadastrado', 'error');
             return;
           }
           
@@ -687,7 +713,7 @@
           const record = {
             tipo_usuario: 'usuario_cadastrado',
             nome_completo: nomeCompleto,
-            nome_usuario: usuario,
+            cpf: cpf,
             senha: senha,
             data_criacao: now,
             ultimo_update: now
@@ -895,8 +921,18 @@
           
           <!-- Top 3 Funcionários do M��s -->
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-            <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Top 3 Funcionários do Mês</h2>
-            <div id="dashboard-top-funcionarios"></div>
+            <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Top 3 Funcionários com Mais RIDs</h2>
+            
+            <!-- Cabeçalho das colunas -->
+            <div style="display: grid; grid-template-columns: 100px 2fr 1.5fr 1fr 1.5fr; gap: 16px; padding: 12px 16px; background: ${config.background_color || defaultConfig.background_color}; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">Posição</div>
+              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">Funcionário</div>
+              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">Departamento</div>
+              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">Total RIDs</div>
+              <div style="font-size: 12px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">Última Atualização</div>
+            </div>
+            
+            <div id="dashboard-top-funcionarios" style="max-height: 300px; overflow-y: auto;" class="scrollable"></div>
           </div>
         </div>
       `;
@@ -911,57 +947,77 @@
       
       const config = window.elementSdk?.config || defaultConfig;
       
-      // Obter data do início do mês atual
-      const now = new Date();
-      const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1);
+      // Filtrar apenas RIDs (excluir usuários cadastrados)
+      const ridsData = currentData.filter(r => r.tipo_usuario === 'funcionario');
       
-      // Filtrar apenas RIDs (excluir usuários cadastrados) do mês atual
-      const ridsDoMes = currentData.filter(r => {
-        if (r.tipo_usuario !== 'funcionario') return false;
-        const dataCriacao = new Date(r.data_criacao);
-        return dataCriacao >= inicioMes;
-      });
-      
-      // Contar RIDs por funcionário
+      // Contar RIDs por funcionário e obter última atualização
       const contagemPorFuncionario = {};
-      ridsDoMes.forEach(r => {
+      ridsData.forEach(r => {
         if (r.nome_funcionario) {
-          contagemPorFuncionario[r.nome_funcionario] = (contagemPorFuncionario[r.nome_funcionario] || 0) + 1;
+          if (!contagemPorFuncionario[r.nome_funcionario]) {
+            contagemPorFuncionario[r.nome_funcionario] = {
+              count: 0,
+              ultimaAtualizacao: r.ultimo_update || r.data_criacao
+            };
+          }
+          contagemPorFuncionario[r.nome_funcionario].count++;
+          
+          // Atualizar para a data mais recente
+          const dataAtual = new Date(r.ultimo_update || r.data_criacao);
+          const dataArmazenada = new Date(contagemPorFuncionario[r.nome_funcionario].ultimaAtualizacao);
+          if (dataAtual > dataArmazenada) {
+            contagemPorFuncionario[r.nome_funcionario].ultimaAtualizacao = r.ultimo_update || r.data_criacao;
+          }
         }
       });
       
       // Converter para array e ordenar
       const ranking = Object.entries(contagemPorFuncionario)
-        .map(([nome, count]) => ({ nome, count }))
+        .map(([nome, data]) => ({ 
+          nome, 
+          count: data.count,
+          ultimaAtualizacao: data.ultimaAtualizacao
+        }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 3);
       
       if (ranking.length === 0) {
-        container.innerHTML = `<p style="opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Nenhum RID registrado este mês</p>`;
+        container.innerHTML = `<p style="opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Nenhum RID registrado ainda</p>`;
         return;
       }
       
-      const medals = ['🥇', '🥈', '🥉'];
-      const colors = [
-        config.primary_action_color || defaultConfig.primary_action_color,
-        '#94a3b8',
-        '#cd7f32'
+      const medals = [
+        `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`,
+        `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`,
+        `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CD7F32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`
       ];
+      const departamentos = ['Produção', 'Manutenção', 'Qualidade']; // Departamentos de exemplo
       
-      container.innerHTML = ranking.map((func, index) => `
-        <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: ${config.background_color || defaultConfig.background_color}; border-radius: 12px; margin-bottom: ${index < ranking.length - 1 ? '12px' : '0'};">
-          <div style="font-size: 32px; width: 48px; text-align: center;">
-            ${medals[index]}
+      container.innerHTML = ranking.map((func, index) => {
+        const dataFormatada = new Date(func.ultimaAtualizacao).toLocaleDateString('pt-BR', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Atribuir departamento baseado no índice (exemplo)
+        const departamento = departamentos[index % departamentos.length];
+        
+        return `
+        <div style="display: grid; grid-template-columns: 100px 2fr 1.5fr 1fr 1.5fr; gap: 16px; padding: 14px 16px; border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>${medals[index]}</span>
+            <span style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">${index + 1}º</span>
           </div>
-          <div style="flex: 1;">
-            <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">${func.nome}</h3>
-            <p style="margin: 0; font-size: 13px; opacity: 0.7; color: ${config.text_color || defaultConfig.text_color};">${func.count} RID${func.count !== 1 ? 's' : ''} registrado${func.count !== 1 ? 's' : ''} este mês</p>
-          </div>
-          <div style="font-size: 24px; font-weight: 700; color: ${colors[index]};">
-            ${func.count}
-          </div>
+          <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">${func.nome}</div>
+          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color};">${departamento}</div>
+          <div style="font-size: 13px; font-weight: 700; color: ${config.primary_action_color || defaultConfig.primary_action_color};">${func.count}</div>
+          <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7;">${dataFormatada}</div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
     
     function renderDashboardRecentRids() {
@@ -1912,5 +1968,5 @@
     // ============================================
     initElementSdk();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a45479eb0218e32',t:'MTc2NDExNzA1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a455775e0088e32',t:'MTc2NDExNzcwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
