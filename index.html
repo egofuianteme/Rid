@@ -23,7 +23,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
-    // Expor funções Firebase globalmente
+    // Expor fun    ões Firebase globalmente
     window.firebaseDB = {
       db,
       collection,
@@ -289,7 +289,7 @@
   <div id="app-root"></div>
   <script>
     // ============================================
-    // CONFIGURAÇÃO EDITAVEL
+    // CONFIGURAÇÃO EDIT  VEL
     // ============================================
     const defaultConfig = {
       background_color: "#F5F5F5",
@@ -405,7 +405,7 @@
     }
     
     // ============================================
-    // ICONES SVG
+    //   CONES SVG
     // ============================================
     const icons = {
       user: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -457,7 +457,7 @@
                     titulo: rid.titulo || 'RID sem título',
                     data: new Date().toISOString()
                   });
-                  console.log('🔔 Nova notificação (designaçao):', rid.titulo);
+                  console.log('🔔 Nova notificação (designaç  o):', rid.titulo);
                   showMessage(`Novo RID designado: ${rid.titulo}`, 'info');
                 }
               }
@@ -824,7 +824,7 @@
             return;
           }
           
-          // Verificar se o CPF ja existe
+          // Verificar se o CPF j   existe
           const cpfExiste = currentFuncionarios.find(u => u.cpf === cpf);
           
           if (cpfExiste) {
@@ -885,11 +885,11 @@
               </div>
               
               <div style="display: flex; align-items: center; gap: 12px;">
-                <button id="btn-notificacoes" style="position: relative; padding: 10px; border: 1px solid #FFD700; background: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;">
+                <button id="btn-notificacoes" style="position: relative; padding: 10px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                   <span id="notif-badge" style="display: none; position: absolute; top: -4px; right: -4px; background: #dc2626; color: white; border-radius: 10px; padding: 2px 6px; font-size: 10px; font-weight: 700; min-width: 18px; text-align: center;"></span>
                 </button>
-                <button id="btn-logout" style="padding: 10px 16px; border: 1px solid #FFD700; background: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;">
+                <button id="btn-logout" style="padding: 10px 16px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; background: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color}; transition: background 0.2s;">
                   ${icons.logout}
                   <span>Sair</span>
                 </button>
@@ -1043,7 +1043,7 @@
             </div>
           </div>
           
-          <!-- Ultimos RIDs -->
+          <!--   ltimos RIDs -->
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px;">
             <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">RIDs Registrados Esta Semana</h2>
             
@@ -1563,7 +1563,7 @@
             
             <!-- Ações Corretivas (Somente Leitura) -->
             <div>
-              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Açoes Corretivas</label>
+              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Aç    es Corretivas</label>
               <div style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.background_color || defaultConfig.background_color}; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7; min-height: 60px;">
                 ${rid.acoes_corretivas || 'Não informado'}
               </div>
@@ -1598,7 +1598,7 @@
             
             <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Campos Editáveis</h3>
             
-            <!-- Status (EDITAVEL) -->
+            <!-- Status (EDIT  VEL) -->
             <div>
               <label for="edit-rid-status" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
               <select id="edit-rid-status" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
@@ -1827,7 +1827,7 @@
       content.innerHTML = `
         <div class="fade-in">
           <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Funcionários</h1>
-          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcionarios cadastrados</p>
+          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcion  rios cadastrados</p>
           
           <div id="funcionarios-list-container"></div>
         </div>
@@ -2010,7 +2010,7 @@
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
             <div>
               <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Relatórios</h1>
-              <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};"></p>
+              <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Campos 1-12 são puxados da aba RIDs (somente leitura). Demais campos são editáveis.</p>
             </div>
             <button id="btn-exportar-relatorio" style="padding: 12px 20px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -2336,25 +2336,20 @@
       
       // Cabeçalhos
       const headers = [
-        'RID Nº',
-        '1. Unidade',
-        '2. Data da Emissão',
-        '3. Emitente',
-        '4. Funcionário Terceiro ou Visitante',
-        '5. Setor ou Empresa do Emitente',
-        '6. Local do Incidente ou Desvio',
-        '7. Gênese do Incidente ou Desvio',
-        '8. Origem da Detecção',
+        'RID N  ',
+        '1. Emitente',
+        '2. Tipo de Contrato',
+        '3. Unidade',
+        '4. Setor do Emitente',
+        '5. Data',
+        '6. Incidente ou Desvios',
+        '7. Origem da Detecção',
+        '8. Local da Ocorrência',
         '9. Descrição',
         '10. Classificação de Risco',
         '11. Ação Imediata',
-        '12. Ações Corretivas',
-        '13. Responsável pelas Ações',
-        '14. Prazo para Conclusão',
-        '15. Data da Conclusão',
-        '16. Status'
-        ];
-
+        '12. Status'
+      ];
       
       // Dados
       const rows = currentData.map((rid, index) => {
@@ -2362,49 +2357,45 @@
         const ridNumero = String(index + 1).padStart(4, '0');
         
         return [
-  ridNumero,
-  rid.unidade || '',
-  dataOcorrencia,
-  rid.emitente || '',
-  rid.tipo_contrato || '',
-  rid.setor || '',
-  rid.local_ocorrencia || '',
-  rid.incidente || '',
-  rid.origem_deteccao || '',
-  rid.descricao || '',
-  rid.classificacao_risco || '',
-  rid.acao_imediata || '',
-  rid.acoes_corretivas || '',
-  rid.responsavel_acoes || '',
-  rid.prazo_conclusao || '',
-  rid.data_conclusao || '',
-  rid.status || ''
-];
+          ridNumero,
+          rid.emitente || '',
+          rid.tipo_contrato || '',
+          rid.unidade || '',
+          rid.setor || '',
+          dataOcorrencia,
+          rid.incidente || '',
+          rid.origem_deteccao || '',
+          rid.local_ocorrencia || '',
+          rid.descricao || '',
+          rid.classificacao_risco || '',
+          rid.acao_imediata || '',
+          rid.status || ''
+        ];
       });
       
       // Criar CSV
-      let csv = headers.join(';') + '\n';
-      rows.forEach(row => {
-        const escapedRow = row.map(cell => {
-          const cellStr = String(cell).replace(/"/g, '""');
-          return `"${cellStr}"`;
-        });
-        csv += escapedRow.join(';') + '\n';
-      });
-      
-      // Download
-      const BOM = "\uFEFF";
-      const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `relatorio_rids_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      showMessage('Relatório exportado com sucesso!', 'success');
+let csv = headers.join(';') + '\n';
+rows.forEach(row => {
+    const escapedRow = row.map(cell => {
+        const cellStr = String(cell).replace(/"/g, '""');
+        return `"${cellStr}"`;
+    });
+    csv += escapedRow.join(';') + '\n';
+});
+
+// Download (CORRIGIDO)
+const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+
+const link = document.createElement('a');
+const url = URL.createObjectURL(blob);
+link.setAttribute('href', url);
+link.setAttribute('download', `relatorio_rids_${new Date().toISOString().split('T')[0]}.csv`);
+link.style.visibility = 'hidden';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+showMessage('Relatório exportado com sucesso!', 'success');
     }
     
     // ============================================
@@ -2487,7 +2478,7 @@
                     <option value="ADM">ADM</option>
                     <option value="M. MOVEL">M. MOVEL</option>
                     <option value="M. FIXA">M. FIXA</option>
-                    <option value="M. ELETRICA">M. ELÉTRICA</option>
+                    <option value="M. EL      TRICA">M. ELÉTRICA</option>
                     <option value="PRODUÇÃO">PRODUÇÃO</option>
                     <option value="MINA">MINA</option>
                   </select>
@@ -2520,7 +2511,7 @@
                     <option value="Inspeção programada">Inspeção programada</option>
                     <option value="Inspeção não programada">Inspeção não programada</option>
                     <option value="Observação Comportamental">Observação Comportamental</option>
-                    <option value="Constatação espontanea">Constatação espontânea</option>
+                    <option value="Constatação espont  nea">Constatação espontânea</option>
                     <option value="Auditoria">Auditoria</option>
                   </select>
                 </div>
@@ -2912,7 +2903,7 @@
         }
         
         console.log('📝 Adicionando dados de teste...');
-        showMessage('Carregando dados de demonstracão...', 'info');
+        showMessage('Carregando dados de demonstra   ão...', 'info');
         
         // Adicionar funcionários de teste
         const funcionariosTeste = [
@@ -2938,7 +2929,218 @@
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         console.log('📋 Adicionando RIDs...');
-      
+        
+        // Adicionar RIDs de teste
+        const ridsTeste = [
+          {
+            nome_funcionario: 'João Silva Santos',
+            emitente: 'João Silva Santos',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 01',
+            setor: 'PRODUÇÃO',
+            data_ocorrencia: '2024-01-15',
+            incidente: 'Condição de Risco',
+            origem_deteccao: 'Inspeção programada',
+            local_ocorrencia: 'Linha de Produção A',
+            titulo: 'Condição de Risco - Linha de Produção A',
+            descricao: 'Identificado cabo elétrico exposto próximo à área de circulação de funcionários, apresentando risco de choque elétrico.',
+            classificacao_risco: 'Alto',
+            acao_imediata: 'Área isolada com fita zebrada e sinalização de perigo. Equipe de manutenção elétrica acionada.',
+            status: 'Vencidos',
+            acoes_corretivas: 'Substituir cabo danificado e instalar proteção adequada',
+            responsavel_acoes: 'Equipe de Manutenção Elétrica',
+            prazo_conclusao: '2024-01-20'
+          },
+          {
+            nome_funcionario: 'Maria Oliveira Costa',
+            emitente: 'Maria Oliveira Costa',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 02',
+            setor: 'M. MOVEL',
+            data_ocorrencia: '2024-01-18',
+            incidente: 'Desvio Comportamental',
+            origem_deteccao: 'Observação Comportamental',
+            local_ocorrencia: 'Oficina Mecânica',
+            titulo: 'Desvio Comportamental - Oficina Mecânica',
+            descricao: 'Funcionário operando empilhadeira sem utilizar cinto de segurança conforme procedimento operacional padrão.',
+            classificacao_risco: 'Médio',
+            acao_imediata: 'Operação interrompida imediatamente. Realizado diálogo de segurança com o operador sobre a importância do uso correto dos EPIs.',
+            status: 'Corrigidos',
+            acoes_corretivas: 'Treinamento de reciclagem sobre operação segura de empilhadeiras',
+            responsavel_acoes: 'Supervisor de Segurança',
+            prazo_conclusao: '2024-01-25',
+            data_conclusao: '2024-01-23'
+          },
+          {
+            nome_funcionario: 'Pedro Henrique Souza',
+            emitente: 'Pedro Henrique Souza',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 01',
+            setor: 'MINA',
+            data_ocorrencia: '2024-01-20',
+            incidente: 'Quase acidente',
+            origem_deteccao: 'Constatação espontânea',
+            local_ocorrencia: 'Frente de Lavra 03',
+            titulo: 'Quase acidente - Frente de Lavra 03',
+            descricao: 'Queda de rocha de aproximadamente 50kg próximo a operador durante desmonte. Operador não foi atingido pois estava fora da área de risco no momento.',
+            classificacao_risco: 'Crítico',
+            acao_imediata: 'Área interditada imediatamente. Realizada inspeção geotécnica completa da frente de lavra. Reforço de contenção instalado.',
+            status: 'Vencidos',
+            acoes_corretivas: 'Implementar sistema de monitoramento geotécnico contínuo e revisão do plano de fogo',
+            responsavel_acoes: 'Engenheiro de Minas',
+            prazo_conclusao: '2024-02-05'
+          },
+          {
+            nome_funcionario: 'Ana Paula Ferreira',
+            emitente: 'Ana Paula Ferreira',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 02',
+            setor: 'ADM',
+            data_ocorrencia: '2024-01-22',
+            incidente: 'Condição de Risco',
+            origem_deteccao: 'Inspeção não programada',
+            local_ocorrencia: 'Escritório Administrativo',
+            titulo: 'Condição de Risco - Escritório Administrativo',
+            descricao: 'Extintor de incêndio com prazo de validade vencido há 3 meses. Equipamento não estava em condições de uso em caso de emergência.',
+            classificacao_risco: 'Médio',
+            acao_imediata: 'Extintor removido e substituído por unidade com validade em dia. Verificação de todos os extintores do pr  dio realizada.',
+            status: 'Corrigidos',
+            acoes_corretivas: 'Implementar checklist mensal de verificação de extintores',
+            responsavel_acoes: 'Brigada de Incêndio',
+            prazo_conclusao: '2024-01-24',
+            data_conclusao: '2024-01-24'
+          },
+          {
+            nome_funcionario: 'Carlos Eduardo Lima',
+            emitente: 'Carlos Eduardo Lima',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 01',
+            setor: 'M. FIXA',
+            data_ocorrencia: '2024-01-23',
+            incidente: 'Dano Material',
+            origem_deteccao: 'CSL',
+            local_ocorrencia: 'Britador Primário',
+            titulo: 'Dano Material - Britador Primário',
+            descricao: 'Correia transportadora apresentou rasgo de 2 metros devido a material contundente não identificado na alimentação.',
+            classificacao_risco: 'Baixo',
+            acao_imediata: 'Equipamento desligado. Correia substituída por unidade reserva. Produção retomada após 4 horas.',
+            status: 'Corrigidos',
+            acoes_corretivas: 'Instalar detector de metais antes da alimentação do britador',
+            responsavel_acoes: 'Supervisor de Manutenção',
+            prazo_conclusao: '2024-02-15',
+            data_conclusao: '2024-01-30'
+          },
+          {
+            nome_funcionario: 'Juliana Martins Rocha',
+            emitente: 'Juliana Martins Rocha',
+            tipo_contrato: 'Terceiro Contratado',
+            unidade: 'Unidade 02',
+            setor: 'M. ELÉTRICA',
+            data_ocorrencia: '2024-01-24',
+            incidente: 'Condição de Risco',
+            origem_deteccao: 'Auditoria',
+            local_ocorrencia: 'Subestação Elétrica',
+            titulo: 'Condi  ão de Risco - Subestação Elétrica',
+            descricao: 'Identificado acesso não controlado à subestação. Porta de acesso sem cadeado e sinalização de perigo inadequada.',
+            classificacao_risco: 'Alto',
+            acao_imediata: 'Instalado cadeado de segurança e placas de advertência. Acesso restrito apenas a pessoal autorizado.',
+            status: 'Em aberto',
+            acoes_corretivas: 'Implementar sistema de controle de acesso eletrônico',
+            responsavel_acoes: 'Engenheiro Eletricista',
+            prazo_conclusao: '2024-02-10'
+          },
+          {
+            nome_funcionario: 'Roberto Carlos Alves',
+            emitente: 'Roberto Carlos Alves',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 01',
+            setor: 'PRODUÇ  O',
+            data_ocorrencia: '2024-01-25',
+            incidente: 'Desvio Comportamental',
+            origem_deteccao: 'Inspeção programada',
+            local_ocorrencia: 'Área de Carregamento',
+            titulo: 'Desvio Comportamental - Área de Carregamento',
+            descricao: 'Operador de carregadeira transitando em velocidade acima do permitido (30 km/h) na área interna da planta.',
+            classificacao_risco: 'Alto',
+            acao_imediata: 'Operador orientado sobre os limites de velocidade. Realizado DDS (Diálogo Diário de Segurança) com toda equipe.',
+            status: 'Vencidos',
+            acoes_corretivas: 'Instalar redutores de velocidade e placas de sinalização adicionais',
+            responsavel_acoes: 'Supervisor de Operações',
+            prazo_conclusao: '2024-02-08'
+          },
+          {
+            nome_funcionario: 'Fernanda Costa Ribeiro',
+            emitente: 'Fernanda Costa Ribeiro',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 02',
+            setor: 'PRODUÇÃO',
+            data_ocorrencia: '2024-01-26',
+            incidente: 'Condição de Risco',
+            origem_deteccao: 'Constatação espontânea',
+            local_ocorrencia: 'Peneira Vibratória',
+            titulo: 'Condição de Risco - Peneira Vibratória',
+            descricao: 'Proteç  o lateral da peneira vibratória danificada, permitindo acesso a partes móveis do equipamento durante operação.',
+            classificacao_risco: 'Crítico',
+            acao_imediata: 'Equipamento desligado imediatamente. Área isolada até conclusão do reparo da proteção.',
+            status: 'Em aberto',
+            acoes_corretivas: 'Substituir proteção danificada e implementar inspeção semanal de proteções',
+            responsavel_acoes: 'Equipe de Manutenção Mecânica',
+            prazo_conclusao: '2024-01-28'
+          },
+          {
+            nome_funcionario: 'João Silva Santos',
+            emitente: 'João Silva Santos',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 01',
+            setor: 'PRODUÇÃO',
+            data_ocorrencia: '2024-01-27',
+            incidente: 'Quase acidente',
+            origem_deteccao: 'Observação Comportamental',
+            local_ocorrencia: 'Pátio de Estocagem',
+            titulo: 'Quase acidente - Pátio de Estocagem',
+            descricao: 'Pedestre atravessou área de manobra de caminhões sem aguardar sinalização do operador. Caminhão freou a tempo evitando atropelamento.',
+            classificacao_risco: 'Crítico',
+            acao_imediata: 'Pedestre orientado sobre procedimentos de segurança. Reforçada sinalização de área de risco.',
+            status: 'Vencidos',
+            acoes_corretivas: 'Criar passarela exclusiva para pedestres e instalar sistema de alerta sonoro',
+            responsavel_acoes: 'Engenheiro de Segurança',
+            prazo_conclusao: '2024-02-20'
+          },
+          {
+            nome_funcionario: 'Maria Oliveira Costa',
+            emitente: 'Maria Oliveira Costa',
+            tipo_contrato: 'Funcionário',
+            unidade: 'Unidade 02',
+            setor: 'M. MOVEL',
+            data_ocorrencia: '2024-01-28',
+            incidente: 'Dano Material',
+            origem_deteccao: 'Inspeção programada',
+            local_ocorrencia: 'Garagem de Veículos',
+            titulo: 'Dano Material - Garagem de Veículos',
+            descricao: 'Vazamento de óleo hidráulico em escavadeira devido a mangueira rompida. Aproximadamente 20 litros de óleo derramados no piso.',
+            classificacao_risco: 'Médio',
+            acao_imediata: 'Equipamento isolado. Óleo contido com material absorvente. Mangueira substituída.',
+            status: 'Corrigidos',
+            acoes_corretivas: 'Implementar inspeção preventiva quinzenal de mangueiras hidráulicas',
+            responsavel_acoes: 'Mecânico Responsável',
+            prazo_conclusao: '2024-02-05',
+            data_conclusao: '2024-01-29'
+          }
+        ];
+        
+        for (const rid of ridsTeste) {
+          await window.salvarRIDFirebase(rid);
+          console.log(`✅ RID adicionado: ${rid.titulo}`);
+        }
+        
+        console.log('✅ Todos os RIDs de teste adicionados');
+        showMessage('✅ Dados de demonstração carregados com sucesso!', 'success');
+        
+      } catch (error) {
+        console.error('❌ Erro ao adicionar dados de teste:', error);
+        showMessage('Erro ao carregar dados de demonstra  ão', 'error');
+      }
+    }
     
     // ============================================
     // BOOTSTRAP
