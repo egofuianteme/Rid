@@ -2383,13 +2383,13 @@
       });
       
       // Criar CSV
-      let csv = headers.join(',') + '\n';
+      let csv = headers.join(';') + '\n';
       rows.forEach(row => {
         const escapedRow = row.map(cell => {
           const cellStr = String(cell).replace(/"/g, '""');
           return `"${cellStr}"`;
         });
-        csv += escapedRow.join(',') + '\n';
+        csv += escapedRow.join(';') + '\n';
       });
       
       // Download
