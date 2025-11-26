@@ -23,7 +23,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
-    // Expor fun    ões Firebase globalmente
+    // Expor fun����ões Firebase globalmente
     window.firebaseDB = {
       db,
       collection,
@@ -90,7 +90,7 @@
             ...doc.data()
           });
         });
-        console.log('    RIDs buscados do Firebase:', rids.length);
+        console.log('��� RIDs buscados do Firebase:', rids.length);
         return rids;
       } catch (error) {
         console.error('❌ Erro ao buscar RIDs do Firebase:', error);
@@ -111,7 +111,7 @@
             ...doc.data()
           });
         });
-        console.log('   Funcionários buscados do Firebase:', funcionarios.length);
+        console.log('�� Funcionários buscados do Firebase:', funcionarios.length);
         return funcionarios;
       } catch (error) {
         console.error('❌ Erro ao buscar funcionários do Firebase:', error);
@@ -211,7 +211,7 @@
       });
     };
     
-    console.log('    Firebase inicializado com sucesso!');
+    console.log('��� Firebase inicializado com sucesso!');
     console.log('📡 Sincronização em tempo real ativada!');
   </script>
   <style>
@@ -289,7 +289,7 @@
   <div id="app-root"></div>
   <script>
     // ============================================
-    // CONFIGURAÇÃO EDIT  VEL
+    // CONFIGURAÇÃO EDIT��VEL
     // ============================================
     const defaultConfig = {
       background_color: "#F5F5F5",
@@ -405,7 +405,7 @@
     }
     
     // ============================================
-    //   CONES SVG
+    // ��CONES SVG
     // ============================================
     const icons = {
       user: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -457,7 +457,7 @@
                     titulo: rid.titulo || 'RID sem título',
                     data: new Date().toISOString()
                   });
-                  console.log('🔔 Nova notificação (designaç  o):', rid.titulo);
+                  console.log('🔔 Nova notificação (designaç��o):', rid.titulo);
                   showMessage(`Novo RID designado: ${rid.titulo}`, 'info');
                 }
               }
@@ -824,7 +824,7 @@
             return;
           }
           
-          // Verificar se o CPF j   existe
+          // Verificar se o CPF j�� existe
           const cpfExiste = currentFuncionarios.find(u => u.cpf === cpf);
           
           if (cpfExiste) {
@@ -846,7 +846,7 @@
               senha: senha
             });
             
-            // Verificar se    um CPF administrativo
+            // Verificar se �� um CPF administrativo
             if (cpfsAdministradores.includes(cpf)) {
               showMessage('Conta de administrador criada com sucesso! Faça login para continuar.', 'success');
             } else {
@@ -1043,7 +1043,7 @@
             </div>
           </div>
           
-          <!--   ltimos RIDs -->
+          <!-- ��ltimos RIDs -->
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px;">
             <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">RIDs Registrados Esta Semana</h2>
             
@@ -1563,7 +1563,7 @@
             
             <!-- Ações Corretivas (Somente Leitura) -->
             <div>
-              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Aç    es Corretivas</label>
+              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Aç����es Corretivas</label>
               <div style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.background_color || defaultConfig.background_color}; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7; min-height: 60px;">
                 ${rid.acoes_corretivas || 'Não informado'}
               </div>
@@ -1598,7 +1598,7 @@
             
             <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Campos Editáveis</h3>
             
-            <!-- Status (EDIT  VEL) -->
+            <!-- Status (EDIT��VEL) -->
             <div>
               <label for="edit-rid-status" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
               <select id="edit-rid-status" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
@@ -1827,7 +1827,7 @@
       content.innerHTML = `
         <div class="fade-in">
           <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Funcionários</h1>
-          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcion  rios cadastrados</p>
+          <p style="margin: 0 0 32px 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Lista de funcion��rios cadastrados</p>
           
           <div id="funcionarios-list-container"></div>
         </div>
@@ -2336,7 +2336,7 @@
       
       // Cabeçalhos
       const headers = [
-        'RID N  ',
+        'RID N��',
         '1. Emitente',
         '2. Tipo de Contrato',
         '3. Unidade',
@@ -2374,28 +2374,27 @@
       });
       
       // Criar CSV
-let csv = headers.join(';') + '\n';
-rows.forEach(row => {
-    const escapedRow = row.map(cell => {
-        const cellStr = String(cell).replace(/"/g, '""');
-        return `"${cellStr}"`;
-    });
-    csv += escapedRow.join(';') + '\n';
-});
-
-// Download (CORRIGIDO)
-const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-
-const link = document.createElement('a');
-const url = URL.createObjectURL(blob);
-link.setAttribute('href', url);
-link.setAttribute('download', `relatorio_rids_${new Date().toISOString().split('T')[0]}.csv`);
-link.style.visibility = 'hidden';
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-showMessage('Relatório exportado com sucesso!', 'success');
+      let csv = headers.join(',') + '\n';
+      rows.forEach(row => {
+        const escapedRow = row.map(cell => {
+          const cellStr = String(cell).replace(/"/g, '""');
+          return `"${cellStr}"`;
+        });
+        csv += escapedRow.join(',') + '\n';
+      });
+      
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `relatorio_rids_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showMessage('Relatório exportado com sucesso!', 'success');
     }
     
     // ============================================
@@ -2478,7 +2477,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
                     <option value="ADM">ADM</option>
                     <option value="M. MOVEL">M. MOVEL</option>
                     <option value="M. FIXA">M. FIXA</option>
-                    <option value="M. EL      TRICA">M. ELÉTRICA</option>
+                    <option value="M. EL������TRICA">M. ELÉTRICA</option>
                     <option value="PRODUÇÃO">PRODUÇÃO</option>
                     <option value="MINA">MINA</option>
                   </select>
@@ -2511,7 +2510,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
                     <option value="Inspeção programada">Inspeção programada</option>
                     <option value="Inspeção não programada">Inspeção não programada</option>
                     <option value="Observação Comportamental">Observação Comportamental</option>
-                    <option value="Constatação espont  nea">Constatação espontânea</option>
+                    <option value="Constatação espont��nea">Constatação espontânea</option>
                     <option value="Auditoria">Auditoria</option>
                   </select>
                 </div>
@@ -2892,18 +2891,18 @@ showMessage('Relatório exportado com sucesso!', 'success');
         const funcionariosExistentes = await window.buscarFuncionariosFirebase();
         const ridsExistentes = await window.buscarRIDsFirebase();
         
-        console.log(`     Funcionários existentes: ${funcionariosExistentes.length}`);
+        console.log(`���� Funcionários existentes: ${funcionariosExistentes.length}`);
         console.log(`📊 RIDs existentes: ${ridsExistentes.length}`);
         
         // Se já existem dados, não adicionar
         if (funcionariosExistentes.length > 0 || ridsExistentes.length > 0) {
-          console.log('    Dados já existem no Firebase, pulando inserção');
+          console.log('��� Dados já existem no Firebase, pulando inserção');
           showMessage('Sistema carregado com dados existentes', 'info');
           return;
         }
         
         console.log('📝 Adicionando dados de teste...');
-        showMessage('Carregando dados de demonstra   ão...', 'info');
+        showMessage('Carregando dados de demonstra���ão...', 'info');
         
         // Adicionar funcionários de teste
         const funcionariosTeste = [
@@ -3003,7 +3002,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
             titulo: 'Condição de Risco - Escritório Administrativo',
             descricao: 'Extintor de incêndio com prazo de validade vencido há 3 meses. Equipamento não estava em condições de uso em caso de emergência.',
             classificacao_risco: 'Médio',
-            acao_imediata: 'Extintor removido e substituído por unidade com validade em dia. Verificação de todos os extintores do pr  dio realizada.',
+            acao_imediata: 'Extintor removido e substituído por unidade com validade em dia. Verificação de todos os extintores do pr��dio realizada.',
             status: 'Corrigidos',
             acoes_corretivas: 'Implementar checklist mensal de verificação de extintores',
             responsavel_acoes: 'Brigada de Incêndio',
@@ -3040,7 +3039,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
             incidente: 'Condição de Risco',
             origem_deteccao: 'Auditoria',
             local_ocorrencia: 'Subestação Elétrica',
-            titulo: 'Condi  ão de Risco - Subestação Elétrica',
+            titulo: 'Condi��ão de Risco - Subestação Elétrica',
             descricao: 'Identificado acesso não controlado à subestação. Porta de acesso sem cadeado e sinalização de perigo inadequada.',
             classificacao_risco: 'Alto',
             acao_imediata: 'Instalado cadeado de segurança e placas de advertência. Acesso restrito apenas a pessoal autorizado.',
@@ -3054,7 +3053,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
             emitente: 'Roberto Carlos Alves',
             tipo_contrato: 'Funcionário',
             unidade: 'Unidade 01',
-            setor: 'PRODUÇ  O',
+            setor: 'PRODUÇ��O',
             data_ocorrencia: '2024-01-25',
             incidente: 'Desvio Comportamental',
             origem_deteccao: 'Inspeção programada',
@@ -3079,7 +3078,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
             origem_deteccao: 'Constatação espontânea',
             local_ocorrencia: 'Peneira Vibratória',
             titulo: 'Condição de Risco - Peneira Vibratória',
-            descricao: 'Proteç  o lateral da peneira vibratória danificada, permitindo acesso a partes móveis do equipamento durante operação.',
+            descricao: 'Proteç��o lateral da peneira vibratória danificada, permitindo acesso a partes móveis do equipamento durante operação.',
             classificacao_risco: 'Crítico',
             acao_imediata: 'Equipamento desligado imediatamente. Área isolada até conclusão do reparo da proteção.',
             status: 'Em aberto',
@@ -3138,7 +3137,7 @@ showMessage('Relatório exportado com sucesso!', 'success');
         
       } catch (error) {
         console.error('❌ Erro ao adicionar dados de teste:', error);
-        showMessage('Erro ao carregar dados de demonstra  ão', 'error');
+        showMessage('Erro ao carregar dados de demonstra��ão', 'error');
       }
     }
     
@@ -3150,5 +3149,5 @@ showMessage('Relatório exportado com sucesso!', 'success');
     // Adicionar dados de teste após 3 segundos (dar tempo para Firebase inicializar)
     setTimeout(adicionarDadosDeTeste, 3000);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a46f389a6c91ab1',t:'MTc2NDEzNDU4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a4cd14ea532ee1b',t:'MTc2NDE5NjA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
