@@ -90,7 +90,7 @@
             ...doc.data()
           });
         });
-        console.log('��� RIDs buscados do Firebase:', rids.length);
+        console.log('    RIDs buscados do Firebase:', rids.length);
         return rids;
       } catch (error) {
         console.error('❌ Erro ao buscar RIDs do Firebase:', error);
@@ -111,7 +111,7 @@
             ...doc.data()
           });
         });
-        console.log('�� Funcionários buscados do Firebase:', funcionarios.length);
+        console.log('   Funcionários buscados do Firebase:', funcionarios.length);
         return funcionarios;
       } catch (error) {
         console.error('❌ Erro ao buscar funcionários do Firebase:', error);
@@ -211,7 +211,7 @@
       });
     };
     
-    console.log('��� Firebase inicializado com sucesso!');
+    console.log('    Firebase inicializado com sucesso!');
     console.log('📡 Sincronização em tempo real ativada!');
   </script>
   <style>
@@ -846,7 +846,7 @@
               senha: senha
             });
             
-            // Verificar se �� um CPF administrativo
+            // Verificar se    um CPF administrativo
             if (cpfsAdministradores.includes(cpf)) {
               showMessage('Conta de administrador criada com sucesso! Faça login para continuar.', 'success');
             } else {
@@ -2901,18 +2901,30 @@
         const funcionariosExistentes = await window.buscarFuncionariosFirebase();
         const ridsExistentes = await window.buscarRIDsFirebase();
         
-        console.log(`���� Funcionários existentes: ${funcionariosExistentes.length}`);
+        console.log(`     Funcionários existentes: ${funcionariosExistentes.length}`);
         console.log(`📊 RIDs existentes: ${ridsExistentes.length}`);
         
         // Se já existem dados, não adicionar
         if (funcionariosExistentes.length > 0 || ridsExistentes.length > 0) {
-          console.log('��� Dados já existem no Firebase, pulando inserção');
+          console.log('    Dados já existem no Firebase, pulando inserção');
           showMessage('Sistema carregado com dados existentes', 'info');
           return;
         }
         
         console.log('📝 Adicionando dados de teste...');
         showMessage('Carregando dados de demonstracão...', 'info');
+        
+        // Adicionar funcionários de teste
+        const funcionariosTeste = [
+          { nome_completo: 'João Silva Santos', cpf: '38927158020', senha: '1234' },
+          { nome_completo: 'Maria Oliveira Costa', cpf: '71294531004', senha: '1234' },
+          { nome_completo: 'Pedro Henrique Souza', cpf: '05862974006', senha: '1234' },
+          { nome_completo: 'Ana Paula Ferreira', cpf: '12345678901', senha: '1234' },
+          { nome_completo: 'Carlos Eduardo Lima', cpf: '98765432109', senha: '1234' },
+          { nome_completo: 'Juliana Martins Rocha', cpf: '45678912345', senha: '1234' },
+          { nome_completo: 'Roberto Carlos Alves', cpf: '78945612378', senha: '1234' },
+          { nome_completo: 'Fernanda Costa Ribeiro', cpf: '32165498732', senha: '1234' }
+        ];
         
         console.log('👥 Adicionando funcionários...');
         for (const func of funcionariosTeste) {
