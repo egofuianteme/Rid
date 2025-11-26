@@ -23,7 +23,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
-    // Expor funções Firebase globalmente
+    // Expor fun����ões Firebase globalmente
     window.firebaseDB = {
       db,
       collection,
@@ -90,7 +90,7 @@
             ...doc.data()
           });
         });
-        console.log('📥 RIDs buscados do Firebase:', rids.length);
+        console.log('��� RIDs buscados do Firebase:', rids.length);
         return rids;
       } catch (error) {
         console.error('❌ Erro ao buscar RIDs do Firebase:', error);
@@ -111,7 +111,7 @@
             ...doc.data()
           });
         });
-        console.log('📥 Funcionários buscados do Firebase:', funcionarios.length);
+        console.log('�� Funcionários buscados do Firebase:', funcionarios.length);
         return funcionarios;
       } catch (error) {
         console.error('❌ Erro ao buscar funcionários do Firebase:', error);
@@ -289,7 +289,7 @@
   <div id="app-root"></div>
   <script>
     // ============================================
-    // CONFIGURAÇÃO EDITÁVEL
+    // CONFIGURAÇÃO EDIT��VEL
     // ============================================
     const defaultConfig = {
       background_color: "#F5F5F5",
@@ -405,7 +405,7 @@
     }
     
     // ============================================
-    // ÍCONES SVG
+    // ��CONES SVG
     // ============================================
     const icons = {
       user: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -457,7 +457,7 @@
                     titulo: rid.titulo || 'RID sem título',
                     data: new Date().toISOString()
                   });
-                  console.log('🔔 Nova notificação (designação):', rid.titulo);
+                  console.log('🔔 Nova notificação (designaç��o):', rid.titulo);
                   showMessage(`Novo RID designado: ${rid.titulo}`, 'info');
                 }
               }
@@ -693,13 +693,7 @@
                 </button>
               </form>
               
-              <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20; text-align: center;">
-                <p style="margin: 0 0 12px 0; font-size: 12px; opacity: 0.6; color: ${config.text_color || defaultConfig.text_color};">Credenciais de demonstração:</p>
-                <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: ${config.text_color || defaultConfig.text_color};">
-                  <div><strong>Admin:</strong> <code id="demo-admin-user" style="background: ${config.background_color || defaultConfig.background_color}; padding: 2px 6px; border-radius: 4px;"></code> / <code id="demo-admin-pass" style="background: ${config.background_color || defaultConfig.background_color}; padding: 2px 6px; border-radius: 4px;"></code></div>
-                  <div><strong>Funcionário:</strong> cadastre-se com seu CPF</div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -1569,7 +1563,7 @@
             
             <!-- Ações Corretivas (Somente Leitura) -->
             <div>
-              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Ações Corretivas</label>
+              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Aç����es Corretivas</label>
               <div style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.background_color || defaultConfig.background_color}; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7; min-height: 60px;">
                 ${rid.acoes_corretivas || 'Não informado'}
               </div>
@@ -2016,7 +2010,7 @@
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
             <div>
               <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Relatórios</h1>
-              <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Planilha completa de RIDs com informações detalhadas</p>
+              <p style="margin: 0; opacity: 0.6; font-size: 14px; color: ${config.text_color || defaultConfig.text_color};">Campos 1-12 são puxados da aba RIDs (somente leitura). Demais campos são editáveis.</p>
             </div>
             <button id="btn-exportar-relatorio" style="padding: 12px 20px; border: none; background: ${config.primary_action_color || defaultConfig.primary_action_color}; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -2026,26 +2020,26 @@
           
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
             <div id="relatorio-table-container" style="overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 280px);" class="scrollable">
-              <table id="relatorio-table" style="width: 100%; border-collapse: collapse; min-width: 2400px;">
+              <table id="relatorio-table" style="width: 100%; border-collapse: collapse; min-width: 3500px;">
                 <thead style="position: sticky; top: 0; z-index: 10; background: ${config.background_color || defaultConfig.background_color};">
                   <tr>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 100px;">Unidade</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 120px;">Unidade</th>
                     <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 80px;">RID Nº</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 110px;">Data da Emissão</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 130px;">Data da Emissão</th>
                     <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Emitente</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 180px;">Funcionário/Terceiro/Visitante</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Setor/Empresa do Emitente</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Local do Incidente/Desvio</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 180px;">Gênese do Incidente/Desvio</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Origem da Detecção</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 200px;">Funcionário, Terceiro ou Visitante</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 180px;">Setor ou Empresa do Emitente</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 200px;">Local do Incidente ou Desvio</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 200px;">Gênese do Incidente ou Desvio</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 180px;">Origem da Detecção</th>
                     <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 250px;">Descrição</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 120px;">Classificação do Risco</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 140px;">Classificação do Risco</th>
                     <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 200px;">Ação Imediata</th>
                     <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 200px;">Ações Corretivas</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Responsável pelas Ações</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 130px;">Prazo para Conclusão</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 130px;">Data da Conclusão</th>
-                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 100px;">Status</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 180px;">Responsável pelas Ações</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Prazo para Conclusão</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 150px;">Data da Conclusão</th>
+                    <th style="padding: 14px 12px; text-align: left; font-size: 12px; font-weight: 700; color: ${config.text_color || defaultConfig.text_color}; border-bottom: 2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; white-space: nowrap; min-width: 120px;">Status</th>
                   </tr>
                 </thead>
                 <tbody id="relatorio-tbody">
@@ -2078,195 +2072,233 @@
       }
       
       tbody.innerHTML = currentData.map((rid, index) => {
-        const dataEmissao = new Date(rid.data_criacao).toLocaleDateString('pt-BR');
+        const dataOcorrencia = rid.data_ocorrencia ? new Date(rid.data_ocorrencia).toLocaleDateString('pt-BR') : '';
+        const prazoConclusao = rid.prazo_conclusao ? new Date(rid.prazo_conclusao).toLocaleDateString('pt-BR') : '';
+        const dataConclusao = rid.data_conclusao ? new Date(rid.data_conclusao).toLocaleDateString('pt-BR') : '';
         const ridNumero = String(index + 1).padStart(4, '0');
         
         return `
           <tr data-rid-id="${rid.firebaseId}" style="border-bottom: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}20;">
+            <!-- 1. Unidade (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="unidade" 
-                data-rid-id="${rid.firebaseId}"
-                type="text"
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="unidade"
                 value="${rid.unidade || ''}"
-                placeholder="Unidade"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                placeholder="Digite a unidade"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
+            
+            <!-- 2. RID Nº (somente leitura) -->
             <td style="padding: 10px 12px;">
-              <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; padding: 6px 8px;">#${ridNumero}</div>
+              <div style="font-size: 13px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color}; padding: 6px 8px; background: ${config.background_color || defaultConfig.background_color}; border-radius: 4px;">#${ridNumero}</div>
             </td>
-            <td style="padding: 10px 12px;">
-              <div style="font-size: 13px; color: ${config.text_color || defaultConfig.text_color}; padding: 6px 8px;">${dataEmissao}</div>
-            </td>
+            
+            <!-- 3. Data da Emissão (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="emitente" 
-                data-rid-id="${rid.firebaseId}"
-                type="text"
+                type="date" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="data_ocorrencia"
+                value="${rid.data_ocorrencia || ''}"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 4. Emitente (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="emitente"
                 value="${rid.emitente || ''}"
-                placeholder="Emitente"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                placeholder="Digite o emitente"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
-            <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="tipo_contrato" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="">Selecione...</option>
-                <option value="Funcionário" ${rid.tipo_contrato === 'Funcionário' ? 'selected' : ''}>Funcionário</option>
-                <option value="Terceiro Contratado" ${rid.tipo_contrato === 'Terceiro Contratado' ? 'selected' : ''}>Terceiro Contratado</option>
-                <option value="Terceiro Eventual" ${rid.tipo_contrato === 'Terceiro Eventual' ? 'selected' : ''}>Terceiro Eventual</option>
-                <option value="Visitante" ${rid.tipo_contrato === 'Visitante' ? 'selected' : ''}>Visitante</option>
-              </select>
-            </td>
-            <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="setor" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="">Selecione...</option>
-                <option value="ADM" ${rid.setor === 'ADM' ? 'selected' : ''}>ADM</option>
-                <option value="M. MOVEL" ${rid.setor === 'M. MOVEL' ? 'selected' : ''}>M. MOVEL</option>
-                <option value="M. FIXA" ${rid.setor === 'M. FIXA' ? 'selected' : ''}>M. FIXA</option>
-                <option value="M. ELÉTRICA" ${rid.setor === 'M. ELÉTRICA' ? 'selected' : ''}>M. ELÉTRICA</option>
-                <option value="PRODUÇÃO" ${rid.setor === 'PRODUÇÃO' ? 'selected' : ''}>PRODUÇÃO</option>
-                <option value="MINA" ${rid.setor === 'MINA' ? 'selected' : ''}>MINA</option>
-              </select>
-            </td>
+            
+            <!-- 5. Tipo de Contrato (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="local_ocorrencia" 
-                data-rid-id="${rid.firebaseId}"
-                type="text"
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="tipo_contrato"
+                value="${rid.tipo_contrato || ''}"
+                placeholder="Digite o tipo de contrato"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 6. Setor (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="setor"
+                value="${rid.setor || ''}"
+                placeholder="Digite o setor"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 7. Local da Ocorrência (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="local_ocorrencia"
                 value="${rid.local_ocorrencia || ''}"
-                placeholder="Local"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                placeholder="Digite o local"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
-            <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="incidente" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="">Selecione...</option>
-                <option value="Condição de Risco" ${rid.incidente === 'Condição de Risco' ? 'selected' : ''}>Condição de Risco</option>
-                <option value="Desvio Comportamental" ${rid.incidente === 'Desvio Comportamental' ? 'selected' : ''}>Desvio Comportamental</option>
-                <option value="Dano Material" ${rid.incidente === 'Dano Material' ? 'selected' : ''}>Dano Material</option>
-                <option value="Quase acidente" ${rid.incidente === 'Quase acidente' ? 'selected' : ''}>Quase acidente</option>
-              </select>
-            </td>
-            <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="origem_deteccao" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="">Selecione...</option>
-                <option value="CSL" ${rid.origem_deteccao === 'CSL' ? 'selected' : ''}>CSL</option>
-                <option value="Inspeção programada" ${rid.origem_deteccao === 'Inspeção programada' ? 'selected' : ''}>Inspeção programada</option>
-                <option value="Inspeção não programada" ${rid.origem_deteccao === 'Inspeção não programada' ? 'selected' : ''}>Inspeção não programada</option>
-                <option value="Observação Comportamental" ${rid.origem_deteccao === 'Observação Comportamental' ? 'selected' : ''}>Observação Comportamental</option>
-                <option value="Constatação espontânea" ${rid.origem_deteccao === 'Constatação espontânea' ? 'selected' : ''}>Constatação espontânea</option>
-                <option value="Auditoria" ${rid.origem_deteccao === 'Auditoria' ? 'selected' : ''}>Auditoria</option>
-              </select>
-            </td>
-            <td style="padding: 10px 12px;">
-              <textarea 
-                class="cell-input" 
-                data-field="descricao" 
-                data-rid-id="${rid.firebaseId}"
-                placeholder="Descrição"
-                rows="2"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; resize: vertical; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">${rid.descricao || ''}</textarea>
-            </td>
-            <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="classificacao_risco" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="">Selecione...</option>
-                <option value="Baixo" ${rid.classificacao_risco === 'Baixo' ? 'selected' : ''}>Baixo</option>
-                <option value="Médio" ${rid.classificacao_risco === 'Médio' ? 'selected' : ''}>Médio</option>
-                <option value="Alto" ${rid.classificacao_risco === 'Alto' ? 'selected' : ''}>Alto</option>
-                <option value="Crítico" ${rid.classificacao_risco === 'Crítico' ? 'selected' : ''}>Crítico</option>
-              </select>
-            </td>
-            <td style="padding: 10px 12px;">
-              <textarea 
-                class="cell-input" 
-                data-field="acao_imediata" 
-                data-rid-id="${rid.firebaseId}"
-                placeholder="Ação imediata"
-                rows="2"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; resize: vertical; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">${rid.acao_imediata || ''}</textarea>
-            </td>
-            <td style="padding: 10px 12px;">
-              <textarea 
-                class="cell-input" 
-                data-field="acoes_corretivas" 
-                data-rid-id="${rid.firebaseId}"
-                placeholder="Ações corretivas"
-                rows="2"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; resize: vertical; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">${rid.acoes_corretivas || ''}</textarea>
-            </td>
+            
+            <!-- 8. Incidente (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="responsavel_acoes" 
-                data-rid-id="${rid.firebaseId}"
-                type="text"
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="incidente"
+                value="${rid.incidente || ''}"
+                placeholder="Digite o incidente"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 9. Origem da Detecção (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="origem_deteccao"
+                value="${rid.origem_deteccao || ''}"
+                placeholder="Digite a origem"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 10. Descrição (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="descricao"
+                value="${rid.descricao || ''}"
+                placeholder="Digite a descrição"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 11. Classificação de Risco (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="classificacao_risco"
+                value="${rid.classificacao_risco || ''}"
+                placeholder="Digite o risco"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 12. Ação Imediata (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="acao_imediata"
+                value="${rid.acao_imediata || ''}"
+                placeholder="Digite a ação imediata"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 13. Ações Corretivas (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="acoes_corretivas"
+                value="${rid.acoes_corretivas || ''}"
+                placeholder="Digite as ações corretivas"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
+            </td>
+            
+            <!-- 14. Responsável pelas Ações (EDITÁVEL) -->
+            <td style="padding: 10px 12px;">
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="responsavel_acoes"
                 value="${rid.responsavel_acoes || ''}"
-                placeholder="Responsável"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                placeholder="Digite o responsável"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
+            
+            <!-- 15. Prazo para Conclusão (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="prazo_conclusao" 
-                data-rid-id="${rid.firebaseId}"
-                type="date"
+                type="date" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="prazo_conclusao"
                 value="${rid.prazo_conclusao || ''}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
+            
+            <!-- 16. Data da Conclusão (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
               <input 
-                class="cell-input" 
-                data-field="data_conclusao" 
-                data-rid-id="${rid.firebaseId}"
-                type="date"
+                type="date" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="data_conclusao"
                 value="${rid.data_conclusao || ''}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};" />
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
+            
+            <!-- 17. Status (EDITÁVEL) -->
             <td style="padding: 10px 12px;">
-              <select 
-                class="cell-input" 
-                data-field="status" 
-                data-rid-id="${rid.firebaseId}"
-                style="width: 100%; padding: 6px 8px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}30; border-radius: 4px; font-size: 13px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
-                <option value="Em aberto" ${rid.status === 'Em aberto' ? 'selected' : ''}>Em aberto</option>
-                <option value="Vencidos" ${rid.status === 'Vencidos' ? 'selected' : ''}>Vencidos</option>
-                <option value="Corrigidos" ${rid.status === 'Corrigidos' ? 'selected' : ''}>Corrigidos</option>
-              </select>
+              <input 
+                type="text" 
+                class="campo-editavel" 
+                data-rid-id="${rid.firebaseId}" 
+                data-campo="status"
+                value="${rid.status || ''}"
+                placeholder="Digite o status"
+                style="width: 100%; padding: 6px 8px; border: none; border-radius: 4px; font-size: 13px; background: transparent; color: ${config.text_color || defaultConfig.text_color}; outline: none;"
+              />
             </td>
           </tr>
         `;
       }).join('');
-    }
-    
-    function attachRelatorioListeners() {
-      // Listener para edição de células
-      const inputs = document.querySelectorAll('.cell-input');
-      inputs.forEach(input => {
-        input.addEventListener('change', async (e) => {
-          const field = e.target.dataset.field;
+      
+      // Adicionar event listeners aos campos editáveis
+      const camposEditaveis = document.querySelectorAll('.campo-editavel');
+      camposEditaveis.forEach(campo => {
+        campo.addEventListener('change', async (e) => {
           const ridId = e.target.dataset.ridId;
-          const value = e.target.value;
+          const nomeCampo = e.target.dataset.campo;
+          const novoValor = e.target.value.trim();
           
           if (!window.atualizarRIDFirebase) {
             showMessage('Sistema de dados não disponível', 'error');
@@ -2274,16 +2306,19 @@
           }
           
           try {
-            await window.atualizarRIDFirebase(ridId, {
-              [field]: value
-            });
-            showMessage('Campo atualizado com sucesso', 'success');
+            const updates = {};
+            updates[nomeCampo] = novoValor;
+            
+            await window.atualizarRIDFirebase(ridId, updates);
+            showMessage('Campo atualizado com sucesso!', 'success');
           } catch (error) {
             showMessage('Erro ao atualizar campo', 'error');
           }
         });
       });
-      
+    }
+    
+    function attachRelatorioListeners() {
       // Botão de exportar CSV
       const btnExportar = $('btn-exportar-relatorio');
       if (btnExportar) {
@@ -2301,49 +2336,39 @@
       
       // Cabeçalhos
       const headers = [
-        'Unidade',
-        'RID Nº',
-        'Data da Emissão',
-        'Emitente',
-        'Funcionário/Terceiro/Visitante',
-        'Setor/Empresa do Emitente',
-        'Local do Incidente/Desvio',
-        'Gênese do Incidente/Desvio',
-        'Origem da Detecção',
-        'Descrição',
-        'Classificação do Risco',
-        'Ação Imediata',
-        'Ações Corretivas',
-        'Responsável pelas Ações',
-        'Prazo para Conclusão',
-        'Data da Conclusão',
-        'Status'
+        'RID N��',
+        '1. Emitente',
+        '2. Tipo de Contrato',
+        '3. Unidade',
+        '4. Setor do Emitente',
+        '5. Data',
+        '6. Incidente ou Desvios',
+        '7. Origem da Detecção',
+        '8. Local da Ocorrência',
+        '9. Descrição',
+        '10. Classificação de Risco',
+        '11. Ação Imediata',
+        '12. Status'
       ];
       
       // Dados
       const rows = currentData.map((rid, index) => {
-        const dataEmissao = new Date(rid.data_criacao).toLocaleDateString('pt-BR');
+        const dataOcorrencia = rid.data_ocorrencia ? new Date(rid.data_ocorrencia).toLocaleDateString('pt-BR') : '';
         const ridNumero = String(index + 1).padStart(4, '0');
-        const prazoConclusao = rid.prazo_conclusao ? new Date(rid.prazo_conclusao).toLocaleDateString('pt-BR') : '';
-        const dataConclusao = rid.data_conclusao ? new Date(rid.data_conclusao).toLocaleDateString('pt-BR') : '';
         
         return [
-          rid.unidade || '',
           ridNumero,
-          dataEmissao,
           rid.emitente || '',
           rid.tipo_contrato || '',
+          rid.unidade || '',
           rid.setor || '',
-          rid.local_ocorrencia || '',
+          dataOcorrencia,
           rid.incidente || '',
           rid.origem_deteccao || '',
+          rid.local_ocorrencia || '',
           rid.descricao || '',
           rid.classificacao_risco || '',
           rid.acao_imediata || '',
-          rid.acoes_corretivas || '',
-          rid.responsavel_acoes || '',
-          prazoConclusao,
-          dataConclusao,
           rid.status || ''
         ];
       });
@@ -2871,7 +2896,7 @@
         
         // Se já existem dados, não adicionar
         if (funcionariosExistentes.length > 0 || ridsExistentes.length > 0) {
-          console.log('✅ Dados já existem no Firebase, pulando inserção');
+          console.log('��� Dados já existem no Firebase, pulando inserção');
           showMessage('Sistema carregado com dados existentes', 'info');
           return;
         }
@@ -3014,7 +3039,7 @@
             incidente: 'Condição de Risco',
             origem_deteccao: 'Auditoria',
             local_ocorrencia: 'Subestação Elétrica',
-            titulo: 'Condição de Risco - Subestação Elétrica',
+            titulo: 'Condi��ão de Risco - Subestação Elétrica',
             descricao: 'Identificado acesso não controlado à subestação. Porta de acesso sem cadeado e sinalização de perigo inadequada.',
             classificacao_risco: 'Alto',
             acao_imediata: 'Instalado cadeado de segurança e placas de advertência. Acesso restrito apenas a pessoal autorizado.',
@@ -3028,7 +3053,7 @@
             emitente: 'Roberto Carlos Alves',
             tipo_contrato: 'Funcionário',
             unidade: 'Unidade 01',
-            setor: 'PRODUÇÃO',
+            setor: 'PRODUÇ��O',
             data_ocorrencia: '2024-01-25',
             incidente: 'Desvio Comportamental',
             origem_deteccao: 'Inspeção programada',
@@ -3053,7 +3078,7 @@
             origem_deteccao: 'Constatação espontânea',
             local_ocorrencia: 'Peneira Vibratória',
             titulo: 'Condição de Risco - Peneira Vibratória',
-            descricao: 'Proteção lateral da peneira vibratória danificada, permitindo acesso a partes móveis do equipamento durante operação.',
+            descricao: 'Proteç��o lateral da peneira vibratória danificada, permitindo acesso a partes móveis do equipamento durante operação.',
             classificacao_risco: 'Crítico',
             acao_imediata: 'Equipamento desligado imediatamente. Área isolada até conclusão do reparo da proteção.',
             status: 'Em aberto',
@@ -3112,7 +3137,7 @@
         
       } catch (error) {
         console.error('❌ Erro ao adicionar dados de teste:', error);
-        showMessage('Erro ao carregar dados de demonstração', 'error');
+        showMessage('Erro ao carregar dados de demonstra��ão', 'error');
       }
     }
     
@@ -3124,5 +3149,5 @@
     // Adicionar dados de teste após 3 segundos (dar tempo para Firebase inicializar)
     setTimeout(adicionarDadosDeTeste, 3000);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a45eb742672f1dd',t:'MTc2NDEyMzc2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a46f389a6c91ab1',t:'MTc2NDEzNDU4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
