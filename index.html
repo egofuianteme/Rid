@@ -2362,24 +2362,24 @@
         const ridNumero = String(index + 1).padStart(4, '0');
         
         return [
-          ridNumero,
-          rid.unidade || '',
-          dataOcorrencia,
-          rid.emitente || '',
-          rid.funcionario_terceiro_ou_visitante || '',
-          rid.setor_ou_empresa_do_emitente || '',
-          rid.local_do_incidente_ou_desvio || '',
-          rid.genese_do_incidente_ou_desvio || '',
-          rid.origen_da_detecção || '',
-          rid.descrição || '',
-          rid.classificação_de_risco || '',
-          rid.acao_imediata || '',
-          rid.acoes_corretivas || '',
-          rid.responsavel_pelas_açoes || '',
-          rid.prazo_para_conclusao || '',
-          rid.data_de_comclusão || '',
-          rid.status || ''
-        ];
+  ridNumero,
+  rid.unidade || '',
+  dataOcorrencia,
+  rid.emitente || '',
+  rid.tipo_contrato || '',
+  rid.setor || '',
+  rid.local_ocorrencia || '',
+  rid.incidente || '',
+  rid.origem_deteccao || '',
+  rid.descricao || '',
+  rid.classificacao_risco || '',
+  rid.acao_imediata || '',
+  rid.acoes_corretivas || '',
+  rid.responsavel_acoes || '',
+  rid.prazo_conclusao || '',
+  rid.data_conclusao || '',
+  rid.status || ''
+];
       });
       
       // Criar CSV
