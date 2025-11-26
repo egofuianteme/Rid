@@ -2336,20 +2336,25 @@
       
       // Cabeçalhos
       const headers = [
-        'RID N��',
-        '1. Emitente',
-        '2. Tipo de Contrato',
-        '3. Unidade',
-        '4. Setor do Emitente',
-        '5. Data',
-        '6. Incidente ou Desvios',
-        '7. Origem da Detecção',
-        '8. Local da Ocorrência',
+        'RID Nº',
+        '1. Unidade',
+        '2. Data da Emissão',
+        '3. Emitente',
+        '4. Funcionário, Terceiro ou Visitante',
+        '5. Setor ou Empresa do Emitente',
+        '6. Local do Incidente ou Desvio',
+        '7. Gênese do Incidente ou Desvio',
+        '8. Origem da Detecção',
         '9. Descrição',
         '10. Classificação de Risco',
         '11. Ação Imediata',
-        '12. Status'
-      ];
+        '12. Ações Corretivas',
+        '13. Responsável pelas Ações',
+        '14. Prazo para Conclusão',
+        '15. Data da Conclusão',
+        '16. Status'
+        ];
+
       
       // Dados
       const rows = currentData.map((rid, index) => {
@@ -2358,17 +2363,21 @@
         
         return [
           ridNumero,
-          rid.emitente || '',
-          rid.tipo_contrato || '',
           rid.unidade || '',
-          rid.setor || '',
           dataOcorrencia,
-          rid.incidente || '',
-          rid.origem_deteccao || '',
-          rid.local_ocorrencia || '',
-          rid.descricao || '',
-          rid.classificacao_risco || '',
+          rid.emitente || '',
+          rid.funcionario,_terceiro_ou_visitante || '',
+          rid.setor_ou_empresa_do_emitente || '',
+          rid.local_do_incidente_ou_desvio || '',
+          rid.genese_do_incidente_ou_desvio || '',
+          rid.origen_da_detecção || '',
+          rid.descrição || '',
+          rid.classificação_de_risco || '',
           rid.acao_imediata || '',
+          rid.acoes_corretivas || '',
+          rid.responsavel_pelas_açoes || '',
+          rid.prazo_para_conclusao || '',
+          rid.data_de_comclusão || '',
           rid.status || ''
         ];
       });
