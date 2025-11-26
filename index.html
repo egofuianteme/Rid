@@ -2914,18 +2914,6 @@
         console.log('📝 Adicionando dados de teste...');
         showMessage('Carregando dados de demonstracão...', 'info');
         
-        // Adicionar funcionários de teste
-        const funcionariosTeste = [
-          { nome_completo: 'João Silva Santos', cpf: '38927158020', senha: '1234' },
-          { nome_completo: 'Maria Oliveira Costa', cpf: '71294531004', senha: '1234' },
-          { nome_completo: 'Pedro Henrique Souza', cpf: '05862974006', senha: '1234' },
-          { nome_completo: 'Ana Paula Ferreira', cpf: '12345678901', senha: '1234' },
-          { nome_completo: 'Carlos Eduardo Lima', cpf: '98765432109', senha: '1234' },
-          { nome_completo: 'Juliana Martins Rocha', cpf: '45678912345', senha: '1234' },
-          { nome_completo: 'Roberto Carlos Alves', cpf: '78945612378', senha: '1234' },
-          { nome_completo: 'Fernanda Costa Ribeiro', cpf: '32165498732', senha: '1234' }
-        ];
-        
         console.log('👥 Adicionando funcionários...');
         for (const func of funcionariosTeste) {
           await window.salvarFuncionarioFirebase(func);
