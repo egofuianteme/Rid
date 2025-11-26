@@ -289,7 +289,7 @@
   <div id="app-root"></div>
   <script>
     // ============================================
-    // CONFIGURAÇÃO EDIT��VEL
+    // CONFIGURAÇÃO EDITAVEL
     // ============================================
     const defaultConfig = {
       background_color: "#F5F5F5",
@@ -405,7 +405,7 @@
     }
     
     // ============================================
-    // ��CONES SVG
+    // ICONES SVG
     // ============================================
     const icons = {
       user: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -457,7 +457,7 @@
                     titulo: rid.titulo || 'RID sem título',
                     data: new Date().toISOString()
                   });
-                  console.log('🔔 Nova notificação (designaç��o):', rid.titulo);
+                  console.log('🔔 Nova notificação (designaçao):', rid.titulo);
                   showMessage(`Novo RID designado: ${rid.titulo}`, 'info');
                 }
               }
@@ -824,7 +824,7 @@
             return;
           }
           
-          // Verificar se o CPF j�� existe
+          // Verificar se o CPF ja existe
           const cpfExiste = currentFuncionarios.find(u => u.cpf === cpf);
           
           if (cpfExiste) {
@@ -1043,7 +1043,7 @@
             </div>
           </div>
           
-          <!-- ��ltimos RIDs -->
+          <!-- Ultimos RIDs -->
           <div style="background: ${config.surface_color || defaultConfig.surface_color}; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px;">
             <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">RIDs Registrados Esta Semana</h2>
             
@@ -1563,7 +1563,7 @@
             
             <!-- Ações Corretivas (Somente Leitura) -->
             <div>
-              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Aç����es Corretivas</label>
+              <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Açoes Corretivas</label>
               <div style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.background_color || defaultConfig.background_color}; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7; min-height: 60px;">
                 ${rid.acoes_corretivas || 'Não informado'}
               </div>
@@ -1598,7 +1598,7 @@
             
             <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: ${config.text_color || defaultConfig.text_color};">Campos Editáveis</h3>
             
-            <!-- Status (EDIT��VEL) -->
+            <!-- Status (EDITAVEL) -->
             <div>
               <label for="edit-rid-status" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: ${config.text_color || defaultConfig.text_color};">Status</label>
               <select id="edit-rid-status" style="width: 100%; padding: 10px 12px; border: 1px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}40; border-radius: 8px; font-size: 14px; background: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color};">
@@ -2487,7 +2487,7 @@
                     <option value="ADM">ADM</option>
                     <option value="M. MOVEL">M. MOVEL</option>
                     <option value="M. FIXA">M. FIXA</option>
-                    <option value="M. EL������TRICA">M. ELÉTRICA</option>
+                    <option value="M. ELETRICA">M. ELÉTRICA</option>
                     <option value="PRODUÇÃO">PRODUÇÃO</option>
                     <option value="MINA">MINA</option>
                   </select>
@@ -2520,7 +2520,7 @@
                     <option value="Inspeção programada">Inspeção programada</option>
                     <option value="Inspeção não programada">Inspeção não programada</option>
                     <option value="Observação Comportamental">Observação Comportamental</option>
-                    <option value="Constatação espont��nea">Constatação espontânea</option>
+                    <option value="Constatação espontanea">Constatação espontânea</option>
                     <option value="Auditoria">Auditoria</option>
                   </select>
                 </div>
@@ -2912,7 +2912,7 @@
         }
         
         console.log('📝 Adicionando dados de teste...');
-        showMessage('Carregando dados de demonstra���ão...', 'info');
+        showMessage('Carregando dados de demonstracão...', 'info');
         
         // Adicionar funcionários de teste
         const funcionariosTeste = [
